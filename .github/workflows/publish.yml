@@ -29,7 +29,7 @@ jobs:
       - name: Verify tag version matches package version
         run: |
           TAG_VERSION="${GITHUB_REF#refs/tags/v}"
-          PACKAGE_VERSION=$(grep -oP 'version\s*=\s*"\K[^"]+' pyproject.toml)
+          PACKAGE_VERSION=$(grep '^version = ' pyproject.toml | head -1 | grep -oP 'version\s*=\s*"\K[^"]+')
 
           if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
             echo "❌ Tag version ($TAG_VERSION) does not match package version ($PACKAGE_VERSION)"
