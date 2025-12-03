@@ -19,15 +19,17 @@ https://test.pypi.org/manage/project/chroma-ingestion/settings/publishing/
 
 ### Step 2: Add Trusted Publisher
 
-Click **"Add a new pending publisher"** and fill in:
+Click **"Add a new pending publisher"** and fill in these EXACT values:
 
 | Field | Value |
 |-------|-------|
 | **Publisher name** | `GitHub` |
-| **Repository owner** | Your GitHub username (e.g., `ob` or whatever your GitHub handle is) |
-| **Repository name** | `chroma` |
+| **Repository owner** | `ollieb89` |
+| **Repository name** | `chroma-tool` |
 | **Workflow name** | `publish-test.yml` |
-| **Environment name** | (leave empty) |
+| **Environment name** | (leave empty - optional) |
+
+⚠️ **Important:** Use the values above exactly - they must match your GitHub repository!
 
 ### Step 3: Save and Approve
 
@@ -46,8 +48,15 @@ After TestPyPI works, register production:
 https://pypi.org/manage/project/chroma-ingestion/settings/publishing/
 ```
 
-Same steps, but:
-- **Workflow name:** `publish.yml` (not `publish-test.yml`)
+Same steps, but with these values:
+
+| Field | Value |
+|-------|-------|
+| **Publisher name** | `GitHub` |
+| **Repository owner** | `ollieb89` |
+| **Repository name** | `chroma-tool` |
+| **Workflow name** | `publish.yml` |
+| **Environment name** | (leave empty - optional) |
 
 ---
 
@@ -86,10 +95,12 @@ Same steps, but:
 
 - [ ] Open TestPyPI settings: https://test.pypi.org/manage/project/chroma-ingestion/settings/publishing/
 - [ ] Click "Add a new pending publisher"
-- [ ] Fill in: GitHub, username, `chroma`, `publish-test.yml`
+- [ ] Fill in: GitHub, `ollieb89`, `chroma-tool`, `publish-test.yml`, (leave environment empty)
 - [ ] Click "Save pending publisher"
-- [ ] Approve the GitHub notification
-- [ ] Verify on TestPyPI (you should see your publisher listed)
+- [ ] Check your email or GitHub notifications for approval link from TestPyPI
+- [ ] Click the link and approve on TestPyPI
+- [ ] Verify on TestPyPI (you should see your publisher listed with ✅ Active)
+- [ ] Repeat for Production PyPI with `publish.yml` workflow name
 - [ ] Done! Ready to test
 
 ---

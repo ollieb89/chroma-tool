@@ -51,8 +51,8 @@ You now have a **complete, production-ready package** with:
 2. **Click "Add a new pending publisher"** and fill in:
    ```
    Publisher name:    GitHub
-   Repository owner:  <your-github-username>
-   Repository name:   chroma
+   Repository owner:  ollieb89
+   Repository name:   chroma-tool
    Workflow name:     publish-test.yml
    Environment name:  (leave empty)
    ```
@@ -77,8 +77,8 @@ See detailed guide: **[TRUSTED_PUBLISHING_SETUP.md](TRUSTED_PUBLISHING_SETUP.md)
 2. **Click "Add a new pending publisher"** and fill in:
    ```
    Publisher name:    GitHub
-   Repository owner:  <your-github-username>
-   Repository name:   chroma
+   Repository owner:  ollieb89
+   Repository name:   chroma-tool
    Workflow name:     publish.yml
    Environment name:  (leave empty)
    ```
