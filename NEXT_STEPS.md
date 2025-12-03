@@ -41,25 +41,23 @@ You now have a **complete, production-ready package** with:
 
 ## What to Do Now (3 Simple Steps)
 
-### Step 1️⃣: Add GitHub Secrets (5 minutes)
+### Step 1️⃣: Configure Trusted Publishing (10 minutes)
 
-Go to your GitHub repository:
-```
-Settings → Secrets and variables → Actions → New repository secret
-```
+Your workflows are now configured to use **Trusted Publishing** (OIDC) - more secure than API tokens!
 
-Add two secrets:
-1. **PYPI_API_TOKEN**
-   - Get from: https://pypi.org/account/api-tokens/
-   - Create a token with "Entire repository" scope
-   - Add as secret named `PYPI_API_TOKEN`
+See the complete setup guide: **[TRUSTED_PUBLISHING_SETUP.md](TRUSTED_PUBLISHING_SETUP.md)**
 
-2. **PYPI_API_TOKEN_TEST**
-   - Get from: https://test.pypi.org/account/api-tokens/
-   - Create a token with "Entire repository" scope
-   - Add as secret named `PYPI_API_TOKEN_TEST`
+Quick steps:
+1. Register TestPyPI Trusted Publisher: https://test.pypi.org/manage/project/chroma-ingestion/settings/publishing/
+2. Register Production PyPI Trusted Publisher: https://pypi.org/manage/project/chroma-ingestion/settings/publishing/
 
-**Done!** The workflows now have access to publish.
+Each takes ~2 minutes. GitHub will prompt you to verify. No GitHub secrets needed!
+
+**Benefits:**
+- ✅ No long-lived API tokens
+- ✅ Automatic token rotation
+- ✅ Industry best practice
+- ✅ Shorter setup than old method
 
 ---
 
@@ -80,6 +78,8 @@ Now watch GitHub Actions:
 2. Look for workflow: "Publish to TestPyPI"
 3. Should complete in 2-3 minutes ✅
 
+**What's different:** No API token authentication errors! The workflow uses Trusted Publishing automatically.
+
 Once it completes, verify installation:
 ```bash
 pip install -i https://test.pypi.org/simple/ chroma-ingestion==0.2.0rc1
@@ -87,8 +87,8 @@ chroma-ingest --help  # Should work!
 ```
 
 If everything works, continue to Step 3. If something fails:
-- Check GitHub Actions logs
-- See RELEASE_GUIDE.md for troubleshooting
+- Check GitHub Actions logs (should show no authentication errors)
+- See TRUSTED_PUBLISHING_SETUP.md for troubleshooting
 - See docs/guides/troubleshooting.md for common issues
 
 ---

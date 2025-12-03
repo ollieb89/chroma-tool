@@ -10,6 +10,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Build and publish to PyPI
+    permissions:
+      id-token: write  # Enable OIDC token generation for trusted publishing
 
     steps:
       - uses: actions/checkout@v4
@@ -46,8 +48,6 @@ jobs:
 
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Verify package on PyPI
         run: |

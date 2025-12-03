@@ -14,6 +14,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Build and publish to TestPyPI
+    permissions:
+      id-token: write  # Enable OIDC token generation for trusted publishing
 
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +42,6 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-          password: ${{ secrets.PYPI_API_TOKEN_TEST }}
           skip-existing: true
 
       - name: Test installation from TestPyPI
