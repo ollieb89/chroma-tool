@@ -21,7 +21,7 @@ chroma/
 ├── src/chroma_ingestion/          # Renamed package (avoids chromadb conflict)
 │   ├── __init__.py                # Package exports
 │   ├── py.typed                   # PEP 561 marker
-│   ├── config.py                  
+│   ├── config.py
 │   ├── ingestion/
 │   │   ├── __init__.py
 │   │   ├── base.py                # CodeIngester

@@ -105,7 +105,7 @@ def main():
     print("=" * 70)
 
     source_folders = get_source_folders()
-    print(f"\n📂 Source Folders:")
+    print("\n📂 Source Folders:")
     for folder in source_folders:
         print(f"   - {folder}")
 
@@ -121,7 +121,7 @@ def main():
     )
 
     # Run ingestion
-    print(f"\n⏳ Starting ingestion...\n")
+    print("\n⏳ Starting ingestion...\n")
     files_processed, chunks_ingested = ingester.ingest_agents(batch_size=args.batch_size)
 
     # Print summary
@@ -136,7 +136,7 @@ def main():
 
     # Print collection stats
     stats = ingester.get_collection_stats()
-    print(f"\n📊 Collection Stats:")
+    print("\n📊 Collection Stats:")
     print(f"   Collection: {stats['collection_name']}")
     print(f"   Total chunks: {stats['total_chunks']}")
     print(f"   Chunk size: {stats['chunk_size']} tokens")

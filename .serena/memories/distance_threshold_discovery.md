@@ -3,7 +3,7 @@
 ## Problem
 Even with high-quality original agents (8-26 KB, 311 chunks), query results show 0% excellent/good matches using our thresholds:
 - Excellent: distance < 0.3 (0% of results)
-- Good: 0.3-0.5 (0% of results)  
+- Good: 0.3-0.5 (0% of results)
 - Weak: 0.5-0.7 (6.2% of results)
 - Poor: > 0.7 (93.8% of results)
 

@@ -79,7 +79,7 @@ git push origin v0.2.0
 
 ### publish-test.yml (TestPyPI)
 
-**Triggers:** 
+**Triggers:**
 - On tag push matching pre-release patterns (rc, a, b)
 - Manual workflow_dispatch from GitHub Actions UI
 
@@ -139,7 +139,7 @@ Format: `MAJOR.MINOR.PATCH[-PRERELEASE]`
 
 Examples:
 - `0.2.0` - Stable release
-- `0.2.1` - Patch release  
+- `0.2.1` - Patch release
 - `0.3.0` - Minor release with new features
 - `1.0.0` - Major release
 - `0.2.0rc1` - Release candidate
@@ -233,7 +233,7 @@ open https://github.com/chroma-core/chroma-ingestion/releases/tag/v0.2.0
 
 **Error:** "File already exists"
 
-**Solution:** 
+**Solution:**
 - Update version and re-tag: `v0.2.1`
 - Or use pre-release: `v0.2.0rc2`
 - TestPyPI allows skipping if already exists

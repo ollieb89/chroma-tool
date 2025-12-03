@@ -477,7 +477,7 @@ TOTAL: ~140 tests covering all layers
    ```bash
    # Run tests with coverage
    pytest tests/ --cov=chroma_ingestion --cov-report=term-missing --cov-fail-under=80
-   
+
    # Run specific test layer
    pytest tests/unit/ -v
    pytest tests/integration/ -v

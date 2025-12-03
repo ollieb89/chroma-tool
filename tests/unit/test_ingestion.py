@@ -8,7 +8,6 @@ Tests for CodeIngester and AgentIngester classes covering:
 - Error handling
 """
 
-import os
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 

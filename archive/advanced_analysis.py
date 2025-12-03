@@ -14,7 +14,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-import json
 
 from clients.chroma_client import get_chroma_client
 from retrieval import CodeRetriever
@@ -39,22 +38,22 @@ def analyze_distance_distribution():
 
     distances = [r.get("distance", float("inf")) for r in results]
 
-    print(f"Sample of distances from 20 results:")
+    print("Sample of distances from 20 results:")
     print(f"  Min distance: {min(distances):.4f}")
     print(f"  Max distance: {max(distances):.4f}")
     print(f"  Average: {sum(distances)/len(distances):.4f}")
-    print(f"\nDistance breakdown:")
+    print("\nDistance breakdown:")
     print(f"  < 0.5:  {sum(1 for d in distances if d < 0.5)} results")
     print(f"  < 0.8:  {sum(1 for d in distances if d < 0.8)} results")
     print(f"  < 1.0:  {sum(1 for d in distances if d < 1.0)} results")
     print(f"  < 1.2:  {sum(1 for d in distances if d < 1.2)} results")
     print(f"  All:    {len(results)} results")
 
-    print(f"\n💡 INSIGHT: Distance threshold of 0.5 is too strict for this collection.")
-    print(f"   Suggested thresholds based on distribution:")
-    print(f"   - Strict (high precision): 0.95")
-    print(f"   - Moderate (balanced): 1.0")
-    print(f"   - Permissive: 1.2")
+    print("\n💡 INSIGHT: Distance threshold of 0.5 is too strict for this collection.")
+    print("   Suggested thresholds based on distribution:")
+    print("   - Strict (high precision): 0.95")
+    print("   - Moderate (balanced): 1.0")
+    print("   - Permissive: 1.2")
 
     return results
 
@@ -93,7 +92,7 @@ def analyze_metadata_structure():
     retriever = CodeRetriever("agents_analysis")
     collection_info = retriever.get_collection_info()
 
-    print(f"Collection: agents_analysis")
+    print("Collection: agents_analysis")
     if isinstance(collection_info, dict) and "total_documents" in collection_info:
         print(f"Total documents: {collection_info['total_documents']}")
     else:
@@ -103,7 +102,7 @@ def analyze_metadata_structure():
     sample = retriever.query(query_text="Next.js", n_results=1)
     if sample:
         meta = sample[0].get("metadata", {})
-        print(f"\nSample metadata keys:")
+        print("\nSample metadata keys:")
         for key in sorted(meta.keys()):
             value = meta[key]
             if isinstance(value, list):

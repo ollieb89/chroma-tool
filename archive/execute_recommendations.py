@@ -130,7 +130,7 @@ def recommendation_3_different_queries():
             for i, result in enumerate(results):
                 print(format_result(result, i))
         else:
-            print(f"⚠️  No results with distance < 0.5")
+            print("⚠️  No results with distance < 0.5")
             # Show what we get without threshold
             unrestricted = retriever.query(query_text=query, n_results=3)
             print(f"   Without threshold: {len(unrestricted)} results available")
@@ -183,7 +183,7 @@ def recommendation_4_multi_collection_search():
 
             ranked = searcher.search_ranked(query_text="Next.js patterns", n_results=3)
 
-            print(f"✅ Ranked results (best match first):\n")
+            print("✅ Ranked results (best match first):\n")
             for i, result in enumerate(ranked):
                 collection = result.get("collection", "Unknown")
                 agent = result.get("metadata", {}).get("agent_name", "Unknown")

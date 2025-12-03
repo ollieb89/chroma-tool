@@ -408,7 +408,7 @@ python ingest.py --chunk-size 500
 ```
 
 ### Poor retrieval quality
-**Solution**: 
+**Solution**:
 1. Check distance scores (< 0.8 excellent, < 1.0 good, < 1.2 acceptable, > 1.2 poor)
 2. Adjust chunk size (too small loses context, too large loses precision)
 3. Use more specific queries (simplify multi-concept queries)

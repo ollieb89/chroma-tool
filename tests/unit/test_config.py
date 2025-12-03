@@ -9,8 +9,6 @@ from __future__ import annotations
 import os
 from unittest.mock import patch
 
-import pytest
-
 from chroma_ingestion.config import get_chroma_config
 
 

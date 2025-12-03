@@ -59,7 +59,7 @@ from src.retrieval import MultiCollectionSearcher
 # Search across multiple collections at once
 searcher = MultiCollectionSearcher([
     "vibe_agents",
-    "ghc_agents", 
+    "ghc_agents",
     "superclaude_agents"
 ])
 
@@ -250,9 +250,9 @@ for result in ranked[:3]:
 ```python
 class CodeRetriever:
     query(query_text, n_results=3)              # Basic semantic search
-    query_semantic(query_text, n_results=5, 
+    query_semantic(query_text, n_results=5,
                    distance_threshold=0.5)      # Semantic + filtering
-    query_by_metadata(where=None, 
+    query_by_metadata(where=None,
                       where_document=None)      # Metadata filtering
     get_context(query_text, n_results=3,
                 include_metadata=True)          # For prompt injection
@@ -266,7 +266,7 @@ class CodeRetriever:
 class MultiCollectionSearcher:
     search_all(query_text, n_results=3)         # Search all collections
     search_ranked(query_text, n_results=5)      # Ranked results
-    get_context_multiway(query_text, 
+    get_context_multiway(query_text,
                          n_results=2)           # Multi-source context
 ```
 

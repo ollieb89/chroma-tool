@@ -1,7 +1,7 @@
 # Blocker Resolution: Chroma Metadata Type Constraint
 
-**Date:** December 2, 2025  
-**Status:** RESOLVED  
+**Date:** December 2, 2025
+**Status:** RESOLVED
 **Issue:** ValueError during re-ingestion - tech_stack as list not supported
 
 ## The Problem
@@ -9,7 +9,7 @@
 Chroma Cloud API validation rejects list values in metadata. Error:
 
 ```
-ValueError: Expected metadata value to be a str, int, float, bool, SparseVector, or None, 
+ValueError: Expected metadata value to be a str, int, float, bool, SparseVector, or None,
 got ['ai', 'html', 'integration', ...] which is a list in upsert.
 ```
 
@@ -44,7 +44,7 @@ where={"tech_stack": {"$in": ["react", "next.js"]}}
 # ✅ WORKAROUND: Client-side filtering
 results = retriever.query("Next.js patterns", n_results=10)
 filtered = [
-    r for r in results 
+    r for r in results
     if all(tech in r['metadata']['tech_stack'] for tech in ['react', 'next.js'])
 ]
 ```
@@ -71,7 +71,7 @@ filtered = [
 
 **Original Goal:** "Restructure tech_stack as array for better filtering"
 
-**Actual Outcome:** 
+**Actual Outcome:**
 - ❌ Cannot use Chroma's native filtering ($in operator) due to type constraints
 - ✅ Can keep comma-separated string format
 - ✅ Provide client-side filtering workaround

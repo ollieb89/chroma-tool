@@ -97,7 +97,7 @@ Add to `.github/workflows/ci.yml`:
 #    - Spin up Chroma Docker container
 #    - Run integration tests
 #    - Upload coverage
-# 
+#
 # 2. Multi-Version Testing
 #    - Test against Python 3.11, 3.12
 #    - Verify compatibility across versions

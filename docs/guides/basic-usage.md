@@ -139,7 +139,7 @@ queries = [
 for query in queries:
     print(f"\nQuery: {query}")
     results = retriever.query(query, n_results=2)
-    
+
     for result in results:
         filename = result['metadata']['filename']
         distance = result['distance']

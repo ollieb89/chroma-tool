@@ -94,7 +94,7 @@ echo "🐍 Checking Python Package..."
 if command -v python3 &> /dev/null; then
     python3 -c "import sys; sys.path.insert(0, 'src'); from chroma_ingestion import CodeIngester" && \
         check_result 0 "Package imports correctly" || check_result 1 "Package import failed"
-    
+
     python3 -c "import sys; sys.path.insert(0, 'src'); from chroma_ingestion import __version__" && \
         check_result 0 "Version accessible" || check_result 1 "Version not accessible"
 else

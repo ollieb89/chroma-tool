@@ -31,12 +31,12 @@ EXCLUSIONS = [
     "mobile-developer.md",
     "c-pro.md",
     "cpp-pro.md",
-    
+
     # Framework-specific (Svelte not in stack)
     "svelte-development.md",
     "svelte-storybook.md",
     "svelte-testing.md",
-    
+
     # Enterprise tools (not in stack)
     "azure-devops-specialist.md",
     "octopus-deploy-release-notes-mcp.agent.md",
@@ -89,14 +89,14 @@ from src.ingestion import CodeIngester
 
 class AgentIngester(CodeIngester):
     """Specialized ingester for agent definition files.
-    
+
     Extracts structured metadata from agent frontmatter and content:
     - Frontmatter parsing (YAML)
     - Tech stack keyword extraction
     - Category classification
     - Section-aware chunking
     """
-    
+
     # Tech stack keywords to extract
     TECH_KEYWORDS = {
         "frontend": ["nextjs", "next.js", "react", "typescript", "tailwind", "css", "html", "ui", "ux"],
@@ -107,7 +107,7 @@ class AgentIngester(CodeIngester):
         "devops": ["docker", "deployment", "ci/cd", "kubernetes", "vercel", "railway", "cloud"],
         "security": ["security", "auth", "authentication", "jwt", "oauth", "vulnerability"],
     }
-    
+
     # Category classification keywords
     CATEGORY_KEYWORDS = {
         "frontend": ["frontend", "react", "nextjs", "ui", "ux", "component"],
@@ -133,7 +133,7 @@ class AgentIngester(CodeIngester):
         """Initialize agent ingester with multiple source folders."""
         self.source_folders = source_folders
         self.exclusions = exclusions or []
-        
+
         # Initialize parent with first folder (we'll override discovery)
         super().__init__(
             target_folder=source_folders[0],
@@ -147,14 +147,14 @@ class AgentIngester(CodeIngester):
         """Discover agent files across all source folders."""
         import glob
         import os
-        
+
         all_files = []
         for folder in self.source_folders:
             for pattern in self.file_patterns:
                 full_pattern = os.path.join(folder, pattern)
                 files = glob.glob(full_pattern, recursive=True)
                 all_files.extend(files)
-        
+
         # Filter exclusions
         filtered = [
             f for f in all_files
@@ -162,18 +162,18 @@ class AgentIngester(CodeIngester):
             and "__init__.py" not in f
             and "README.md" not in os.path.basename(f)
         ]
-        
+
         return sorted(list(set(filtered)))
 
     def parse_frontmatter(self, content: str) -> Tuple[Dict, str]:
         """Parse YAML frontmatter from agent file.
-        
+
         Returns:
             Tuple of (frontmatter_dict, remaining_content)
         """
         frontmatter = {}
         body = content
-        
+
         # Check for YAML frontmatter
         if content.startswith("---"):
             parts = content.split("---", 2)
@@ -183,43 +183,43 @@ class AgentIngester(CodeIngester):
                     body = parts[2].strip()
                 except yaml.YAMLError:
                     pass
-        
+
         return frontmatter, body
 
     def extract_tech_stack(self, content: str) -> List[str]:
         """Extract tech stack keywords from content."""
         content_lower = content.lower()
         found_tech = set()
-        
+
         for category, keywords in self.TECH_KEYWORDS.items():
             for keyword in keywords:
                 if keyword in content_lower:
                     found_tech.add(keyword)
-        
+
         return list(found_tech)
 
     def classify_category(self, filename: str, content: str) -> str:
         """Classify agent into a category."""
         text = (filename + " " + content).lower()
-        
+
         category_scores = {}
         for category, keywords in self.CATEGORY_KEYWORDS.items():
             score = sum(1 for kw in keywords if kw in text)
             category_scores[category] = score
-        
+
         # Return highest scoring category
         return max(category_scores, key=category_scores.get, default="general")
 
     def extract_metadata(self, file_path: str, content: str) -> Dict:
         """Extract rich metadata from agent file."""
         import os
-        
+
         frontmatter, body = self.parse_frontmatter(content)
         filename = os.path.basename(file_path)
-        
+
         # Parse agent name from filename or title
         agent_name = frontmatter.get("name", filename.replace(".md", "").replace(".agent", "").replace(".prompt", ""))
-        
+
         metadata = {
             "source": file_path,
             "filename": filename,
@@ -233,7 +233,7 @@ class AgentIngester(CodeIngester):
             "file_type": os.path.splitext(file_path)[1],
             "source_collection": self._get_source_collection(file_path),
         }
-        
+
         return metadata, body
 
     def _get_source_collection(self, file_path: str) -> str:
@@ -251,72 +251,72 @@ class AgentIngester(CodeIngester):
 
     def ingest_agents(self, batch_size: int = 50) -> Tuple[int, int]:
         """Ingest agent files with enhanced metadata.
-        
+
         Returns:
             Tuple of (files_processed, chunks_ingested)
         """
         agent_files = self.discover_files()
-        
+
         if not agent_files:
             print(f"❌ No agent files found")
             return 0, 0
-        
+
         print(f"📂 Found {len(agent_files)} agent files across {len(self.source_folders)} folders")
-        
+
         documents = []
         ids = []
         metadatas = []
         files_processed = 0
-        
+
         for file_path in agent_files:
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
-                
+
                 # Extract enhanced metadata
                 base_metadata, body = self.extract_metadata(file_path, content)
-                
+
                 # Create semantic chunks
                 chunks = self.splitter.create_documents([content])  # Use full content for context
-                
+
                 if chunks:
                     files_processed += 1
                     for i, chunk in enumerate(chunks):
                         doc_id = f"{base_metadata['agent_name']}:{i}"
-                        
+
                         # Add chunk-specific metadata
                         chunk_metadata = {
                             **base_metadata,
                             "chunk_index": i,
                             "total_chunks": len(chunks),
                         }
-                        
+
                         documents.append(chunk.page_content)
                         ids.append(doc_id)
                         metadatas.append(chunk_metadata)
-                        
+
             except Exception as e:
                 print(f"⚠️  Could not process {file_path}: {e}")
-        
+
         # Batch upsert
         if documents:
             print(f"🚀 Ingesting {len(documents)} chunks into collection '{self.collection_name}'...")
-            
+
             for i in range(0, len(documents), batch_size):
                 batch_docs = documents[i:i + batch_size]
                 batch_ids = ids[i:i + batch_size]
                 batch_metas = metadatas[i:i + batch_size]
-                
+
                 self.collection.upsert(
                     documents=batch_docs,
                     ids=batch_ids,
                     metadatas=batch_metas,
                 )
                 print(f"  ✓ Batch {i // batch_size + 1} ({len(batch_docs)} chunks)")
-            
+
             print(f"✅ Done! Ingested {len(documents)} chunks from {files_processed} agents")
             return files_processed, len(documents)
-        
+
         return files_processed, 0
 ```
 
@@ -388,10 +388,10 @@ if __name__ == "__main__":
         chunk_overlap=300,
         exclusions=EXCLUSIONS,
     )
-    
+
     files, chunks = ingester.ingest_agents(batch_size=50)
     print(f"\n📊 Summary: {files} files → {chunks} chunks")
-    
+
     # Print stats
     stats = ingester.get_collection_stats()
     print(f"📦 Collection '{stats['collection_name']}' now has {stats['total_chunks']} total chunks")
@@ -429,24 +429,24 @@ from collections import defaultdict
 
 class AgentAnalyzer:
     """Analyze ingested agents for overlaps and consolidation opportunities."""
-    
+
     def __init__(self, collection_name: str = "agents_analysis"):
         self.retriever = CodeRetriever(collection_name)
-    
+
     def find_by_category(self, category: str, n_results: int = 20) -> list:
         """Find all agents in a category."""
         return self.retriever.query_by_metadata(
             where={"category": category},
             n_results=n_results
         )
-    
+
     def find_by_tech_stack(self, tech: str, n_results: int = 20) -> list:
         """Find agents mentioning a specific technology."""
         return self.retriever.query_by_metadata(
             where_document={"$contains": tech},
             n_results=n_results
         )
-    
+
     def find_similar_agents(self, query: str, n_results: int = 10) -> list:
         """Semantic search for similar agents."""
         return self.retriever.query_semantic(
@@ -454,25 +454,25 @@ class AgentAnalyzer:
             n_results=n_results,
             distance_threshold=0.4  # High similarity
         )
-    
+
     def cluster_by_category(self) -> dict:
         """Group all agents by their classified category."""
-        categories = ["frontend", "backend", "architecture", "testing", 
+        categories = ["frontend", "backend", "architecture", "testing",
                       "ai_ml", "devops", "security", "quality", "database", "planning"]
-        
+
         clusters = {}
         for category in categories:
             results = self.find_by_category(category)
             # Extract unique agent names
             agents = list(set(r["metadata"]["agent_name"] for r in results))
             clusters[category] = agents
-        
+
         return clusters
-    
+
     def find_duplicates(self) -> dict:
         """Find agents with high semantic similarity (potential duplicates)."""
         duplicates = defaultdict(list)
-        
+
         # Key queries to identify overlapping agents
         test_queries = [
             ("Next.js development best practices", "frontend"),
@@ -481,21 +481,21 @@ class AgentAnalyzer:
             ("Automated testing with Playwright", "testing"),
             ("Machine learning engineering", "ai_ml"),
         ]
-        
+
         for query, expected_category in test_queries:
             results = self.find_similar_agents(query, n_results=5)
             if len(results) > 1:
                 agents = [r["metadata"]["agent_name"] for r in results]
                 sources = [r["metadata"]["source_collection"] for r in results]
                 duplicates[query] = list(zip(agents, sources))
-        
+
         return duplicates
 
     def generate_consolidation_report(self) -> str:
         """Generate a report for consolidation decisions."""
         report = []
         report.append("# Agent Consolidation Report\n")
-        
+
         # Category clusters
         clusters = self.cluster_by_category()
         report.append("## Agents by Category\n")
@@ -505,7 +505,7 @@ class AgentAnalyzer:
                 for agent in agents:
                     report.append(f"- {agent}")
                 report.append("")
-        
+
         # Duplicates
         duplicates = self.find_duplicates()
         report.append("\n## Potential Duplicates/Overlaps\n")
@@ -514,17 +514,17 @@ class AgentAnalyzer:
             for agent, source in agents:
                 report.append(f"- {agent} (from {source})")
             report.append("")
-        
+
         return "\n".join(report)
 
 
 if __name__ == "__main__":
     analyzer = AgentAnalyzer()
-    
+
     print("=" * 60)
     print("AGENT ANALYSIS REPORT")
     print("=" * 60)
-    
+
     # Print clusters
     clusters = analyzer.cluster_by_category()
     for category, agents in clusters.items():
@@ -533,7 +533,7 @@ if __name__ == "__main__":
             print(f"  - {agent}")
         if len(agents) > 5:
             print(f"  ... and {len(agents) - 5} more")
-    
+
     # Print duplicates
     print("\n" + "=" * 60)
     print("POTENTIAL DUPLICATES")
@@ -543,7 +543,7 @@ if __name__ == "__main__":
         print(f"\n{query}:")
         for agent, source in agents:
             print(f"  - {agent} ({source})")
-    
+
     # Save full report
     report = analyzer.generate_consolidation_report()
     with open("CONSOLIDATION_REPORT.md", "w") as f:

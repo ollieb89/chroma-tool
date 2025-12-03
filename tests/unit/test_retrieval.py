@@ -11,8 +11,6 @@ Tests for CodeRetriever and MultiCollectionSearcher classes covering:
 
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from chroma_ingestion.retrieval.retriever import CodeRetriever, MultiCollectionSearcher
 
 

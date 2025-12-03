@@ -14,7 +14,7 @@ def main():
     client = get_chroma_client()
 
     # Example: Check client is connected
-    print(f"✓ Connected to Chroma Cloud")
+    print("✓ Connected to Chroma Cloud")
     print(f"  Client type: {type(client).__name__}")
 
 

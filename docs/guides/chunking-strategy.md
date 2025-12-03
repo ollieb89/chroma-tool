@@ -43,7 +43,7 @@ The splitter looks for logical boundaries in order:
 ```
 def login(email, password):
     """Authenticate user."""  # ← Split here (after docstring)
-    
+
     user = find_user(email)   # ← Or here (between functions)
     if verify_password(...):
         return token
@@ -203,10 +203,10 @@ Chunks = (5000 - 1000) / (1000 - 200) + 1 = 6 chunks
 ```python
 def calculate_hash(data: bytes) -> str:
     """Calculate SHA256 hash of data.
-    
+
     Args:
         data: Bytes to hash
-        
+
     Returns:
         Hex-encoded hash string
     """
@@ -218,12 +218,12 @@ def calculate_hash(data: bytes) -> str:
 ```python
 def calculate_hash(data: bytes) -> str:
     """Calculate SHA256 hash of data.
-    
+
     Args:
         data: Bytes to hash
-        
+
     [CHUNK BOUNDARY HERE - SPLIT FUNCTION!]
-        
+
     Returns:
         Hex-encoded hash string
     """
@@ -375,7 +375,7 @@ test_cases = [
 
 for query, keywords in test_cases:
     results = retriever.query(query, n_results=3)
-    
+
     if results and results[0]['distance'] < 0.4:
         print(f"✅ '{query}' - Good match")
     else:

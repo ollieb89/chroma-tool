@@ -158,7 +158,7 @@ async def startup():
 4. **Rate Limiting:**
    ```python
    from functools import lru_cache
-   
+
    @lru_cache(maxsize=100)
    def cached_query(q: str):
        return retriever.query(q, n_results=5)
@@ -339,23 +339,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: |
           pip install chroma-ingestion
           docker-compose up -d
-      
+
       - name: Wait for Chroma
         run: |
           until curl http://localhost:9500/api/v1/heartbeat; do
             sleep 1
           done
-      
+
       - name: Ingest code
         run: |
           python -c "
@@ -364,7 +364,7 @@ jobs:
           files, chunks = ingester.ingest_files()
           print(f'Ingested {files} files, {chunks} chunks')
           "
-      
+
       - name: Deploy
         run: |
           # Deploy to production

@@ -1,7 +1,7 @@
 # Threshold Recalibration Execution Plan
 
-**Date:** December 2, 2025  
-**Status:** Planning Phase  
+**Date:** December 2, 2025
+**Status:** Planning Phase
 **Goal:** Implement distance threshold fixes and validate with new thresholds
 
 ---
@@ -88,8 +88,8 @@ Impact: Users filtering results < 0.5 would discard correct agents thinking they
 
 ## Dependencies
 
-**Phase 1 → Phase 2:** Code must be updated before testing  
-**Phase 2 → Phase 3:** Validation must pass before investing in monitoring  
+**Phase 1 → Phase 2:** Code must be updated before testing
+**Phase 2 → Phase 3:** Validation must pass before investing in monitoring
 
 ---
 

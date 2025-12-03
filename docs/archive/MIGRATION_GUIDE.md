@@ -1,9 +1,9 @@
 # Migration Guide: Threshold Calibration v2.0
 
-**Release Date:** December 2, 2025  
-**Version:** 2.0 (Threshold Calibration)  
-**Compatibility:** Backward compatible (documentation only change)  
-**Migration Required:** Yes, for production deployments  
+**Release Date:** December 2, 2025
+**Version:** 2.0 (Threshold Calibration)
+**Compatibility:** Backward compatible (documentation only change)
+**Migration Required:** Yes, for production deployments
 
 ---
 
@@ -346,16 +346,16 @@ See [best_practices_query_formulation.md](best_practices_query_formulation.md) f
 
 ## Summary
 
-✅ **Old thresholds:** < 0.5 excellent → > 0.9 poor  
-✅ **New thresholds:** < 0.8 excellent → > 1.2 poor  
-✅ **Validation:** 12 tests, 100% accuracy, 95% confidence  
-✅ **Backward compatible:** No breaking changes  
-✅ **Migration:** Simple checklist provided above  
+✅ **Old thresholds:** < 0.5 excellent → > 0.9 poor
+✅ **New thresholds:** < 0.8 excellent → > 1.2 poor
+✅ **Validation:** 12 tests, 100% accuracy, 95% confidence
+✅ **Backward compatible:** No breaking changes
+✅ **Migration:** Simple checklist provided above
 
 **Action:** Review your code for hardcoded thresholds and update using the checklist above. Your query results will be more accurate and users will have better experience.
 
 ---
 
-**Documentation Version:** 1.0  
-**Last Updated:** December 2, 2025  
+**Documentation Version:** 1.0
+**Last Updated:** December 2, 2025
 **Status:** ✅ Production Ready

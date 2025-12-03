@@ -8,7 +8,6 @@ Validates:
 4. Tools and technologies are properly documented
 """
 
-import os
 from pathlib import Path
 
 import yaml
@@ -86,7 +85,7 @@ def check_agent_file(agent_name: str, file_path: Path) -> dict:
     results["exists"] = True
 
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         results["content_length"] = len(content)
@@ -154,7 +153,7 @@ def main():
     all_valid = True
     validation_results = []
 
-    for agent_name in CONSOLIDATED_AGENTS.keys():
+    for agent_name in CONSOLIDATED_AGENTS:
         file_path = consolidated_dir / f"{agent_name}.md"
         result = check_agent_file(agent_name, file_path)
         validation_results.append(result)
@@ -168,7 +167,7 @@ def main():
             all_valid = False
 
     # Print results
-    print(f"\n📋 Validation Results:\n")
+    print("\n📋 Validation Results:\n")
     for result in validation_results:
         status = (
             "✅"
@@ -187,7 +186,7 @@ def main():
             for error in result["errors"]:
                 print(f"   ⚠️  {error}")
         else:
-            print(f"   ✓ File exists and valid")
+            print("   ✓ File exists and valid")
             if result.get("found_keywords"):
                 print(f"   ✓ Keywords: {', '.join(result['found_keywords'][:3])}")
             if result.get("found_sections"):

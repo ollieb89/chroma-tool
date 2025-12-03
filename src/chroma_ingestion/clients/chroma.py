@@ -4,7 +4,6 @@ This module provides initialization and utility functions for the Chroma
 HttpClient, following best practices for client management and configuration.
 """
 
-
 import chromadb
 
 from chroma_ingestion.config import get_chroma_config

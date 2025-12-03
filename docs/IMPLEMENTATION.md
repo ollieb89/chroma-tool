@@ -190,11 +190,11 @@ from src.retrieval import CodeRetriever
 def get_code_context(question):
     retriever = CodeRetriever("agents_context")
     results = retriever.query(question, n_results=5)
-    
+
     context = "\n---\n".join([
         r['document'] for r in results
     ])
-    
+
     return f"Code context:\n{context}\n\nQuestion: {question}"
 ```
 

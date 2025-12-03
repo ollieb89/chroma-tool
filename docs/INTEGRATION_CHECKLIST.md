@@ -101,7 +101,7 @@ from src.retrieval import CodeRetriever, MultiCollectionSearcher
 class MyProjectRetriever:
     def __init__(self):
         self.retriever = CodeRetriever("myproject_agents")
-    
+
     def get_agent_context(self, agent_name: str):
         """Get context for a specific agent"""
         return self.retriever.query_semantic(agent_name, n_results=2)
@@ -295,14 +295,14 @@ Design the system..."""
 
 Your integration is successful when:
 
-✅ ChromaDB server runs reliably on port 9500  
-✅ Collections created and verified  
-✅ Retriever module works with your tool  
-✅ Tests pass with good relevance scores  
-✅ Error handling prevents tool failures  
-✅ Documentation is complete  
-✅ End-to-end integration tested  
-✅ Performance meets requirements  
+✅ ChromaDB server runs reliably on port 9500
+✅ Collections created and verified
+✅ Retriever module works with your tool
+✅ Tests pass with good relevance scores
+✅ Error handling prevents tool failures
+✅ Documentation is complete
+✅ End-to-end integration tested
+✅ Performance meets requirements
 
 ---
 

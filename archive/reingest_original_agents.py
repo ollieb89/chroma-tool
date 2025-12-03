@@ -21,7 +21,6 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from clients.chroma_client import get_chroma_client
 from ingestion import CodeIngester
 from retrieval import CodeRetriever
 
@@ -72,7 +71,7 @@ def main():
     document_count, chunk_count = ingester.ingest_files()
     ingestion_time = time.time() - start_time
 
-    print(f"✅ Ingestion Complete")
+    print("✅ Ingestion Complete")
     print(f"   Documents: {document_count}")
     print(f"   Chunks: {chunk_count}")
     print(f"   Time: {ingestion_time:.2f}s")
@@ -219,13 +218,13 @@ def main():
         weak = len([d for d in distances if 0.5 <= d < 0.7])
         poor = len([d for d in distances if d >= 0.7])
 
-        print(f"\n⏱️  Query Performance:")
+        print("\n⏱️  Query Performance:")
         print(f"   Total queries: {len(all_results)}")
         print(f"   Average time: {sum(times)/len(times):.2f}ms")
         print(f"   Min time: {min(times):.2f}ms")
         print(f"   Max time: {max(times):.2f}ms")
 
-        print(f"\n📈 Match Quality Distribution:")
+        print("\n📈 Match Quality Distribution:")
         print(
             f"   Excellent (distance < 0.3): {excellent}/{len(distances)} ({100*excellent/len(distances):.1f}%)"
         )

@@ -5,7 +5,6 @@ opportunities. Generates clustering and semantic similarity reports.
 """
 
 from collections import defaultdict
-from typing import Dict, List, Optional
 
 from chroma_ingestion.retrieval import CodeRetriever
 
@@ -22,7 +21,7 @@ class AgentAnalyzer:
         self.retriever = CodeRetriever(collection_name)
         self.collection_name = collection_name
 
-    def find_by_category(self, category: str, n_results: int = 50) -> List[Dict]:
+    def find_by_category(self, category: str, n_results: int = 50) -> list[dict]:
         """Find all agents in a specific category.
 
         Args:
@@ -37,7 +36,7 @@ class AgentAnalyzer:
             n_results=n_results,
         )
 
-    def find_by_tech_stack(self, tech: str, n_results: int = 20) -> List[Dict]:
+    def find_by_tech_stack(self, tech: str, n_results: int = 20) -> list[dict]:
         """Find agents mentioning a specific technology.
 
         Args:
@@ -52,7 +51,7 @@ class AgentAnalyzer:
             n_results=n_results,
         )
 
-    def find_similar_agents(self, query: str, n_results: int = 10) -> List[Dict]:
+    def find_similar_agents(self, query: str, n_results: int = 10) -> list[dict]:
         """Semantic search for similar agents.
 
         Uses semantic distance to find topically similar agents.
@@ -70,7 +69,7 @@ class AgentAnalyzer:
             distance_threshold=0.4,  # High similarity threshold
         )
 
-    def get_unique_agents(self, results: List[Dict]) -> List[str]:
+    def get_unique_agents(self, results: list[dict]) -> list[str]:
         """Extract unique agent names from query results.
 
         Args:
@@ -85,7 +84,7 @@ class AgentAnalyzer:
                 agents.add(result["metadata"]["agent_name"])
         return sorted(list(agents))
 
-    def cluster_by_category(self) -> Dict[str, List[str]]:
+    def cluster_by_category(self) -> dict[str, list[str]]:
         """Group all agents by their classified category.
 
         Returns:
@@ -113,7 +112,7 @@ class AgentAnalyzer:
 
         return clusters
 
-    def get_category_distribution(self) -> Dict[str, int]:
+    def get_category_distribution(self) -> dict[str, int]:
         """Get count of agents per category.
 
         Returns:
@@ -122,7 +121,7 @@ class AgentAnalyzer:
         clusters = self.cluster_by_category()
         return {cat: len(agents) for cat, agents in clusters.items()}
 
-    def find_duplicates_by_expertise(self) -> Dict[str, List[tuple]]:
+    def find_duplicates_by_expertise(self) -> dict[str, list[tuple]]:
         """Find agents with high semantic similarity (potential duplicates).
 
         Uses semantic queries to identify agents covering similar expertise.
@@ -173,10 +172,10 @@ class AgentAnalyzer:
         # Summary statistics
         clusters = self.cluster_by_category()
         total_agents = sum(len(agents) for agents in clusters.values())
-        report.append(f"## Summary\n")
+        report.append("## Summary\n")
         report.append(f"- **Total unique agents**: {total_agents}")
         report.append(f"- **Categories identified**: {len(clusters)}")
-        report.append(f"- **Target consolidated agents**: 10\n")
+        report.append("- **Target consolidated agents**: 10\n")
         report.append(
             f"- **Estimated reduction**: {total_agents} → 10 (~{100 * (1 - 10/total_agents):.0f}% reduction)\n\n"
         )

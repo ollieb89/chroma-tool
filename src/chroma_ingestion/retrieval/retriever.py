@@ -3,7 +3,6 @@
 Provides tools for querying ingested code chunks and validating data quality.
 """
 
-
 from chroma_ingestion.clients.chroma import get_chroma_client
 
 
@@ -50,6 +49,7 @@ class CodeRetriever:
                     results["documents"][0],
                     results["metadatas"][0],
                     results["distances"][0],
+                    strict=False,
                 ):
                     formatted_results.append(
                         {
@@ -119,7 +119,7 @@ class CodeRetriever:
 
             formatted_results = []
             if results["documents"]:
-                for doc, meta in zip(results["documents"], results["metadatas"]):
+                for doc, meta in zip(results["documents"], results["metadatas"], strict=False):
                     formatted_results.append(
                         {
                             "document": doc,
@@ -178,7 +178,7 @@ class CodeRetriever:
 
             formatted_results = []
             if results["documents"]:
-                for doc, meta in zip(results["documents"], results["metadatas"]):
+                for doc, meta in zip(results["documents"], results["metadatas"], strict=False):
                     formatted_results.append(
                         {
                             "document": doc,

@@ -133,7 +133,6 @@ class TestResetClient:
             patch("chroma_ingestion.clients.chroma.chromadb.HttpClient") as mock_http,
             patch("chroma_ingestion.clients.chroma.get_chroma_config") as mock_config,
         ):
-
             # First initialization with host1
             reset_client()
             mock_config.return_value = {"host": "host1", "port": 9500}

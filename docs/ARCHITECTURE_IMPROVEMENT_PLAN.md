@@ -462,7 +462,7 @@ from chroma_ingestion.clients.chroma import get_chroma_client
 
 __all__ = [
     "CodeIngester",
-    "AgentIngester", 
+    "AgentIngester",
     "CodeRetriever",
     "MultiCollectionSearcher",
     "get_chroma_client",
@@ -493,14 +493,14 @@ def main() -> None:
 def ingest(folder: str, collection: str, chunk_size: int, verify: bool) -> None:
     """Ingest code files into ChromaDB."""
     from chroma_ingestion import CodeIngester
-    
+
     ingester = CodeIngester(
         target_folder=folder,
         collection_name=collection,
         chunk_size=chunk_size,
     )
     ingester.run()
-    
+
     if verify:
         from chroma_ingestion import CodeRetriever
         retriever = CodeRetriever(collection)
@@ -514,10 +514,10 @@ def ingest(folder: str, collection: str, chunk_size: int, verify: bool) -> None:
 def search(query: str, collection: str, num_results: int) -> None:
     """Search ingested code."""
     from chroma_ingestion import CodeRetriever
-    
+
     retriever = CodeRetriever(collection)
     results = retriever.query(query, n_results=num_results)
-    
+
     for i, result in enumerate(results, 1):
         click.echo(f"\n{i}. {result['metadata']['filename']} (dist: {result['distance']:.3f})")
         click.echo(f"   {result['document'][:200]}...")

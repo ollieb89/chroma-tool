@@ -4,7 +4,6 @@ Detailed semantic query analysis for Next.js patterns.
 Shows metadata breakdown, distance interpretation, and tech stack alignment.
 """
 
-import json
 from collections import Counter
 
 from chroma_ingestion.retrieval import CodeRetriever
@@ -101,26 +100,26 @@ def main():
     min_distance = min(distances)
     max_distance = max(distances)
 
-    print(f"\n📊 Distance Metrics:")
+    print("\n📊 Distance Metrics:")
     print(f"   • Average: {avg_distance:.4f}")
     print(f"   • Best match: {min_distance:.4f} (Result #{distances.index(min_distance) + 1})")
     print(f"   • Worst match: {max_distance:.4f} (Result #{distances.index(max_distance) + 1})")
 
-    print(f"\n🎯 Agents Found:")
+    print("\n🎯 Agents Found:")
     for agent in agents:
         print(f"   • {agent}")
 
-    print(f"\n📁 Categories:")
+    print("\n📁 Categories:")
     category_counts = Counter(categories)
     for cat, count in category_counts.most_common():
         print(f"   • {cat}: {count}")
 
-    print(f"\n🔧 Most Common Tech Keywords:")
+    print("\n🔧 Most Common Tech Keywords:")
     tech_counts = Counter(all_tech_keywords)
     for tech, count in tech_counts.most_common(10):
         print(f"   • {tech}: {count}x")
 
-    print(f"\n" + "=" * 100)
+    print("\n" + "=" * 100)
     print("INSIGHTS")
     print("=" * 100)
 

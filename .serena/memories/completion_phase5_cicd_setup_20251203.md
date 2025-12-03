@@ -11,7 +11,7 @@
 Phase 5 successfully created a comprehensive GitHub Actions CI/CD workflow that automates code quality checks and testing. The workflow includes:
 
 - ✅ Lint job (ruff) - Code style and quality checks
-- ✅ Type check job (mypy) - Static type validation  
+- ✅ Type check job (mypy) - Static type validation
 - ✅ Test job (pytest) - Unit and integration test suite with coverage reporting
 - ✅ Codecov integration - Automatic coverage report uploads
 - ✅ Triggers on push to main and pull requests
@@ -190,7 +190,7 @@ pytest tests/ -v --cov=chroma_ingestion --cov-report=term-missing --cov-fail-und
 ### Or Use Nox (if configured)
 ```bash
 uv run nox -s lint      # Run lint
-uv run nox -s type_check # Run type check  
+uv run nox -s type_check # Run type check
 uv run nox -s test      # Run tests
 uv run nox              # Run all (default)
 ```

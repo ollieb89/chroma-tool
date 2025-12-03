@@ -43,7 +43,7 @@ def example_semantic_search():
                 print(f"    Source: {meta['filename']}")
                 print(f"    Type: {meta['file_type']}")
                 print(f"    Relevance (distance): {distance:.4f}")
-                print(f"    Content preview:")
+                print("    Content preview:")
 
                 # Pretty-print content with indentation
                 lines = doc.split("\n")[:5]
@@ -51,7 +51,7 @@ def example_semantic_search():
                     print(f"      {line}")
 
                 if len(doc.split("\n")) > 5:
-                    print(f"      ...")
+                    print("      ...")
         else:
             print("  ❌ No results found")
 
@@ -130,7 +130,7 @@ def example_specialized_queries():
             print(f"   Top match: {meta['filename']}")
             print(f"   Preview: {doc}...")
         else:
-            print(f"   ❌ No results")
+            print("   ❌ No results")
 
 
 if __name__ == "__main__":

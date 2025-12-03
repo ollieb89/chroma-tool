@@ -30,7 +30,7 @@ def hello_world():
 
 class Calculator:
     \"\"\"Simple calculator for testing.\"\"\"
-    
+
     def add(self, a: int, b: int) -> int:
         \"\"\"Add two numbers.\"\"\"
         return a + b

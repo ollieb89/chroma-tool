@@ -7,14 +7,14 @@
 ## Project Overview
 
 **Source Agents:** 55+ files across 4 folders
-- `.github/agents/` 
+- `.github/agents/`
 - `ccs/.claude/agents/`
 - `ghc_tools/agents/`
 - `scf/src/superclaude/agents/`
 
 **Target:** 10 consolidated agents
 - frontend-expert
-- backend-expert  
+- backend-expert
 - architect-expert
 - testing-expert
 - ai-ml-expert
@@ -34,7 +34,7 @@
 - Task 3: Run ingestion and verify stats
 
 ### Phase 3: Semantic Analysis (1-2 hours)
-- Task 4: Create `analyze_agents.py` 
+- Task 4: Create `analyze_agents.py`
 - Task 5: Generate consolidation report
 - Task 6: Review and finalize mapping
 

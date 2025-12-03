@@ -326,7 +326,7 @@ results = retriever.query_by_metadata(
 
 ```
 vibe_agents              # Comprehensive agent library
-ghc_agents               # GitHub Copilot specific agents  
+ghc_agents               # GitHub Copilot specific agents
 superclaude_agents       # SuperClaude framework agents
 project_codebase         # Project-specific code
 patterns_security        # Domain-specific patterns
@@ -368,7 +368,7 @@ assert "old_collection" not in [c.name for c in client.list_collections()]
 def test_query_returns_results():
     retriever = CodeRetriever("test_collection")
     results = retriever.query("test query", n_results=1)
-    
+
     assert len(results) > 0, "Should return at least one result"
     assert "document" in results[0]
     assert "metadata" in results[0]
@@ -377,11 +377,11 @@ def test_query_returns_results():
 def test_semantic_filters_by_distance():
     retriever = CodeRetriever("test_collection")
     results = retriever.query_semantic(
-        "test", 
+        "test",
         n_results=5,
         distance_threshold=0.5
     )
-    
+
     assert all(r["distance"] <= 0.5 for r in results)
 ```
 
@@ -391,7 +391,7 @@ def test_semantic_filters_by_distance():
 def test_multi_collection_search():
     searcher = MultiCollectionSearcher(["vibe_agents", "ghc_agents"])
     results = searcher.search_ranked("architect", n_results=3)
-    
+
     assert len(results) > 0
     assert all("collection" in r for r in results)
     # Verify results are ranked by relevance

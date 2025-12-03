@@ -1,8 +1,8 @@
 # Release Notes: v2.0 Threshold Calibration
 
-**Release Date:** December 2, 2025  
-**Version:** 2.0  
-**Codename:** "Threshold Recalibration"  
+**Release Date:** December 2, 2025
+**Version:** 2.0
+**Codename:** "Threshold Recalibration"
 **Status:** Production Ready ✅
 
 ---
@@ -351,11 +351,11 @@ v2.0: 🟢 Excellent (< 0.8) ← Properly excellent ✓
 
 ## Credits & Acknowledgments
 
-**Validation conducted by:** Chroma Ingestion System - AI Code Agent  
-**Date:** December 2, 2025  
-**Tests:** 12 comprehensive queries  
-**Accuracy:** 100%  
-**Confidence:** 95%+  
+**Validation conducted by:** Chroma Ingestion System - AI Code Agent
+**Date:** December 2, 2025
+**Tests:** 12 comprehensive queries
+**Accuracy:** 100%
+**Confidence:** 95%+
 
 **Key contributors to validation:**
 - CodeRetriever semantic search system
@@ -400,19 +400,19 @@ See LICENSE file for details.
 
 ## Summary
 
-✅ **What:** Distance thresholds recalibrated based on empirical validation  
-✅ **Why:** Old thresholds marked 67% of good results as "poor"  
-✅ **Impact:** Users get accurate ratings, better confidence  
-✅ **Backward Compatible:** No breaking changes  
-✅ **Validated:** 12 tests, 100% accuracy, 95%+ confidence  
-✅ **Documented:** 4 comprehensive documentation files  
+✅ **What:** Distance thresholds recalibrated based on empirical validation
+✅ **Why:** Old thresholds marked 67% of good results as "poor"
+✅ **Impact:** Users get accurate ratings, better confidence
+✅ **Backward Compatible:** No breaking changes
+✅ **Validated:** 12 tests, 100% accuracy, 95%+ confidence
+✅ **Documented:** 4 comprehensive documentation files
 
 **Recommendation:** Upgrade to v2.0 before next production deployment.
 
 ---
 
-**Document Version:** 1.0  
-**Release Date:** December 2, 2025  
+**Document Version:** 1.0
+**Release Date:** December 2, 2025
 **Status:** ✅ Production Ready
 
 🎉 **Welcome to v2.0!**

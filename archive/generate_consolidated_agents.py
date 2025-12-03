@@ -5,11 +5,7 @@ Merges expertise from similar agents into 10 focused consolidated agents
 tailored to the tech stack (Next.js, React, Python, FastAPI, Playwright).
 """
 
-import os
 from pathlib import Path
-from typing import Dict, List
-
-from analyze_agents import AgentAnalyzer
 
 CONSOLIDATED_AGENT_SPECS = {
     "frontend-expert": {
@@ -177,7 +173,7 @@ CONSOLIDATED_AGENT_SPECS = {
 
 def create_consolidated_agent_template(
     agent_name: str,
-    spec: Dict,
+    spec: dict,
 ) -> str:
     """Create a consolidated agent markdown file from specification.
 

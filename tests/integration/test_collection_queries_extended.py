@@ -72,7 +72,11 @@ def test_query(test_num, name, query, expected_agent, expected_distance_range, q
         rating = (
             "🟢 Excellent"
             if distance < 0.8
-            else "🟡 Good" if distance < 1.0 else "🟠 Okay" if distance < 1.2 else "🔴 Poor"
+            else "🟡 Good"
+            if distance < 1.0
+            else "🟠 Okay"
+            if distance < 1.2
+            else "🔴 Poor"
         )
 
         print(f"  Result {i}: {source}")

@@ -42,7 +42,11 @@ def test_frontend_query():
         rating = (
             "🟢 Great"
             if distance < 0.5
-            else "🟡 Good" if distance < 0.7 else "🟠 Okay" if distance < 0.9 else "🔴 Poor"
+            else "🟡 Good"
+            if distance < 0.7
+            else "🟠 Okay"
+            if distance < 0.9
+            else "🔴 Poor"
         )
 
         print(f"Result {i}: {source}")
@@ -77,7 +81,11 @@ def test_devops_query():
         rating = (
             "🟢 Great"
             if distance < 0.5
-            else "🟡 Good" if distance < 0.7 else "🟠 Okay" if distance < 0.9 else "🔴 Poor"
+            else "🟡 Good"
+            if distance < 0.7
+            else "🟠 Okay"
+            if distance < 0.9
+            else "🔴 Poor"
         )
 
         print(f"Result {i}: {source}")
@@ -117,7 +125,11 @@ def test_missing_specialist_query():
         rating = (
             "🟢 Great"
             if distance < 0.5
-            else "🟡 Good" if distance < 0.7 else "🟠 Okay" if distance < 0.9 else "🔴 Poor"
+            else "🟡 Good"
+            if distance < 0.7
+            else "🟠 Okay"
+            if distance < 0.9
+            else "🔴 Poor"
         )
 
         print(f"Result {i}: {source}")
@@ -164,7 +176,11 @@ def test_multiconceptpoor_query():
         rating = (
             "🟢 Great"
             if distance < 0.5
-            else "🟡 Good" if distance < 0.7 else "🟠 Okay" if distance < 0.9 else "🔴 Poor"
+            else "🟡 Good"
+            if distance < 0.7
+            else "🟠 Okay"
+            if distance < 0.9
+            else "🔴 Poor"
         )
 
         print(f"Result {i}: {source}")

@@ -42,7 +42,7 @@ def query_single_collection(query: str, collection: str = "vibe_agents") -> None
         print(f"Result {i}:")
         print(f"  📄 Source: {meta.get('source', 'unknown')}")
         print(f"  📏 Relevance: {(1 - distance):.1%}")
-        print(f"  ✂️  Preview:\n")
+        print("  ✂️  Preview:\n")
         print(f"     {doc[:300]}...")
         print()
 
@@ -76,7 +76,7 @@ def query_all_collections(query: str) -> None:
         print(f"Result {i} ({collection}):")
         print(f"  📄 Source: {meta.get('source', 'unknown')}")
         print(f"  📏 Relevance: {(1 - distance):.1%}")
-        print(f"  ✂️  Preview:\n")
+        print("  ✂️  Preview:\n")
         print(f"     {doc[:300]}...")
         print()
 

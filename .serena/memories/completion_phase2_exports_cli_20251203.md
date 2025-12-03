@@ -21,7 +21,7 @@ from chroma_ingestion.clients.chroma import get_chroma_client
 
 __all__ = [
     "CodeIngester",
-    "AgentIngester", 
+    "AgentIngester",
     "CodeRetriever",
     "MultiCollectionSearcher",
     "get_chroma_client",

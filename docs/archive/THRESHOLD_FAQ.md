@@ -1,6 +1,6 @@
 # Threshold Calibration v2.0 - Frequently Asked Questions
 
-**Last Updated:** December 2, 2025  
+**Last Updated:** December 2, 2025
 **Related Documentation:** [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) • [best_practices_query_formulation.md](best_practices_query_formulation.md) • [RELEASE_NOTES.md](RELEASE_NOTES.md)
 
 ---
@@ -134,11 +134,11 @@ If you have hardcoded threshold checks (e.g., `if distance > 0.9: warn_user()`),
 
 ```
 Do you have code like "if distance < X: use_result()"?
-    
+
     NO  → No changes needed ✅
-    
+
     YES → What is X?
-        
+
         X < 0.5   → Update to < 0.8 (was too strict)
         X = 0.5   → Update to 0.8
         X = 0.7   → Update to 1.0
@@ -195,10 +195,10 @@ They shouldn't. The underlying semantic search hasn't changed—only the interpr
 3. **Expected: Same agents, different scores:**
    ```
    Query: "React patterns"
-   
+
    Old: frontend-architect at 0.92 (was "poor" ❌)
    New: frontend-architect at 0.92 (now "good" ✅)
-   
+
    Agent is THE SAME - just rated better
    ```
 
@@ -260,7 +260,7 @@ Instead of ambiguous single concepts, use **multi-concept queries** that include
 
 **Old (Ambiguous):**
 ```
-"state management"  
+"state management"
 → Distance: 1.38+ (poor, ambiguous)
 ```
 
@@ -298,10 +298,10 @@ See [best_practices_query_formulation.md](best_practices_query_formulation.md) f
 1. **Test with known queries:**
    ```python
    from src.retrieval import CodeRetriever
-   
+
    retriever = CodeRetriever("original_agents")
    results = retriever.query("React hooks patterns", n_results=1)
-   
+
    # Should be:
    # - Agent: frontend-architect ✓
    # - Distance: ~0.92 ✓
@@ -324,7 +324,7 @@ See [best_practices_query_formulation.md](best_practices_query_formulation.md) f
    ```python
    distances = [result.distance for result in results]
    mean_distance = sum(distances) / len(distances)
-   
+
    if mean_distance > 1.0:
        alert("Distance drift detected")
    ```
@@ -405,11 +405,11 @@ True positive rate: ~85%
 
 ## Summary
 
-✅ **Thresholds changed** from theoretical to empirical  
-✅ **No breaking changes** - fully backward compatible  
-✅ **Better user experience** - accurate quality ratings  
-✅ **Simple migration** - see question Q5 for checklist  
-✅ **Fully validated** - 12 tests, 100% accuracy, 95% confidence  
+✅ **Thresholds changed** from theoretical to empirical
+✅ **No breaking changes** - fully backward compatible
+✅ **Better user experience** - accurate quality ratings
+✅ **Simple migration** - see question Q5 for checklist
+✅ **Fully validated** - 12 tests, 100% accuracy, 95% confidence
 
 **Next Steps:**
 1. Review your code for hardcoded thresholds (Question Q5)
@@ -419,6 +419,6 @@ True positive rate: ~85%
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** December 2, 2025  
+**Document Version:** 1.0
+**Last Updated:** December 2, 2025
 **Status:** ✅ Ready for Production

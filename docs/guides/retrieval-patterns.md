@@ -196,7 +196,7 @@ endpoints = retriever.query(
 
 # Filter by file
 api_routes = [
-    r for r in endpoints 
+    r for r in endpoints
     if r['metadata']['file_type'] == '.py'
     and '/api/' in r['metadata']['folder']
 ]

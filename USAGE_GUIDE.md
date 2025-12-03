@@ -18,7 +18,7 @@ for result in results:
     distance = result['distance']
     content = result['document']
     source = result['metadata']['filename']
-    
+
     if distance < 0.8:
         print(f"✅ Excellent match: {source}")
     elif distance < 1.0:
@@ -82,7 +82,7 @@ Result 2: CSharpExpert.agent.md (distance 1.234) 🔴
 
 ```
 ❌ Too long:
-"What are the best practices for implementing secure JWT authentication 
+"What are the best practices for implementing secure JWT authentication
 with refresh tokens and automatic token rotation?"
 
 ✅ Better:
@@ -161,7 +161,7 @@ What to do: Use backend-architect instead, or search for
 ### Example 4: Multi-Concept (Usually Fails) ❌
 
 ```python
-Query: "How do I design a secure backend system 
+Query: "How do I design a secure backend system
         with proper error handling and monitoring?"
 Likely Distance: 1.0-1.2 (good range!)
 
@@ -281,7 +281,7 @@ results = retriever.query("search term", n_results=3)
 results = retriever.query("your query", n_results=5)
 
 # Filter to specific agent
-backend_results = [r for r in results 
+backend_results = [r for r in results
                    if 'backend' in r['metadata']['filename']]
 ```
 

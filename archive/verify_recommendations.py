@@ -171,16 +171,16 @@ def main():
             print(
                 """
     from src.retrieval import CodeRetriever
-    
+
     retriever = CodeRetriever("agents_analysis")
-    
+
     # Use optimal distance threshold
     results = retriever.query_semantic(
         query_text="React hooks",
         n_results=5,
         distance_threshold=1.0
     )
-    
+
     # Or filter by metadata
     results = retriever.query_by_metadata(
         where={"category": "frontend"},

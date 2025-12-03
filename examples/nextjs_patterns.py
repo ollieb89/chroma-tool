@@ -4,8 +4,6 @@ Query the agents_analysis Chroma collection for Next.js patterns.
 Execute with: uv run query_nextjs_patterns.py
 """
 
-import json
-
 from chroma_ingestion.retrieval import CodeRetriever
 
 
@@ -56,7 +54,7 @@ def main():
 
                 # Display metadata
                 if metadata:
-                    print(f"\n📋 Metadata:")
+                    print("\n📋 Metadata:")
                     for key, value in metadata.items():
                         if key in ["agent_name", "category", "tech_stack", "source"]:
                             print(f"   • {key}: {value}")
@@ -66,7 +64,7 @@ def main():
                     preview = document[:300].replace("\n", " ")
                     if len(document) > 300:
                         preview += "..."
-                    print(f"\n📝 Content Preview:")
+                    print("\n📝 Content Preview:")
                     print(f"   {preview}")
 
         print("\n" + "=" * 80)

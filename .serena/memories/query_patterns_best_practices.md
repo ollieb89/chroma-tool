@@ -1,7 +1,7 @@
 # Chroma Query Patterns - Best Practices & Calibration Guide
 
-**Date:** December 2, 2025  
-**Status:** Final Implementation Complete  
+**Date:** December 2, 2025
+**Status:** Final Implementation Complete
 **Version:** 1.0 - Production Ready
 
 ---
@@ -70,8 +70,8 @@ for result in results:
     print(f"---")
 ```
 
-**When to use:** You want only relevant, high-quality results  
-**Expected:** 2-5 results with distance < 1.0  
+**When to use:** You want only relevant, high-quality results
+**Expected:** 2-5 results with distance < 1.0
 **Quality:** ⭐⭐⭐⭐
 
 ---
@@ -89,13 +89,13 @@ results = retriever.query_by_metadata(
 # Combine with semantic search
 semantic_results = retriever.query("React hooks", n_results=10)
 frontend_only = [
-    r for r in semantic_results 
+    r for r in semantic_results
     if r['metadata']['category'] == 'frontend'
 ]
 ```
 
-**When to use:** You want results from a specific domain  
-**Available categories:** frontend, backend, database, devops, security, ai-ml, quality, architecture, planning  
+**When to use:** You want results from a specific domain
+**Available categories:** frontend, backend, database, devops, security, ai-ml, quality, architecture, planning
 **Quality:** ⭐⭐⭐⭐
 
 ---
@@ -125,9 +125,9 @@ for result in results:
     print(f"Agent: {result['metadata']['agent_name']}")
 ```
 
-**When to use:** You want results from entire knowledge base  
-**Available collections:** 5 (2,088 total documents)  
-**Bug Status:** ✅ Fixed in src/retrieval.py (search_ranked method)  
+**When to use:** You want results from entire knowledge base
+**Available collections:** 5 (2,088 total documents)
+**Bug Status:** ✅ Fixed in src/retrieval.py (search_ranked method)
 **Quality:** ⭐⭐⭐⭐
 
 ---
@@ -153,8 +153,8 @@ Please generate a new agent definition...
 """
 ```
 
-**When to use:** Building RAG systems or agent-based workflows  
-**Format:** Markdown with source metadata  
+**When to use:** Building RAG systems or agent-based workflows
+**Format:** Markdown with source metadata
 **Quality:** ⭐⭐⭐⭐
 
 ---
@@ -297,7 +297,7 @@ if results:
     result = results[0]
     tech_stack = result['metadata'].get('tech_stack', '')
     print(f'Tech Stack: {tech_stack}')
-    
+
     # Check if all required techs are present
     has_all = all(tech in tech_stack.lower() for tech in tech_filter)
     print(f'Has React + Next.js: {has_all}')
@@ -324,7 +324,7 @@ if results:
 
 ### Issue: No results with distance < 1.0
 
-**Diagnosis:** Query is too specific or collection lacks matching content  
+**Diagnosis:** Query is too specific or collection lacks matching content
 **Solution:**
 1. Increase threshold to 1.2
 2. Try more general query terms
@@ -343,7 +343,7 @@ results = retriever.query_semantic(
 
 ### Issue: Too many results with low relevance
 
-**Diagnosis:** Threshold is too permissive  
+**Diagnosis:** Threshold is too permissive
 **Solution:** Lower threshold or combine with category filter
 
 ```python
@@ -365,7 +365,7 @@ results = retriever.query_by_metadata(
 
 ### Issue: MultiCollectionSearcher returns error
 
-**Diagnosis:** Likely using outdated search_ranked() method  
+**Diagnosis:** Likely using outdated search_ranked() method
 **Solution:** Update to latest src/retrieval.py with bug fix applied
 
 ---
@@ -419,8 +419,8 @@ context = retriever.get_context("TypeScript patterns", n_results=3)
 
 This guide represents the empirically validated, production-ready approach to querying Chroma collections in the vibe-tools ecosystem. All recommendations are based on testing with real agents and proven to deliver high-quality results.
 
-**Implementation Status:** ✅ Complete  
-**Testing Status:** ✅ Verified (2,088 documents across 5 collections)  
+**Implementation Status:** ✅ Complete
+**Testing Status:** ✅ Verified (2,088 documents across 5 collections)
 **Production Ready:** ✅ Yes
 
 For questions or issues, refer to the proof documents:

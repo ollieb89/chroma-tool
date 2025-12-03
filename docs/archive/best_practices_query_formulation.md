@@ -1,6 +1,6 @@
 # Best Practices: Effective Query Formulation
 
-**Last Updated:** December 2, 2025  
+**Last Updated:** December 2, 2025
 **Related Documentation:** [THRESHOLD_FAQ.md](THRESHOLD_FAQ.md) • [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) • [RELEASE_NOTES.md](RELEASE_NOTES.md)
 
 ---
@@ -558,6 +558,6 @@ Before submitting a query, verify:
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** December 2, 2025  
+**Document Version:** 1.0
+**Last Updated:** December 2, 2025
 **Status:** ✅ Ready for Production

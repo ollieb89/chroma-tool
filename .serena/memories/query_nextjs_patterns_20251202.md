@@ -1,8 +1,8 @@
 # Next.js Patterns Semantic Query Results
 
-**Date:** December 2, 2025  
-**Query:** "Next.js patterns" (n_results=5)  
-**Collection:** agents_analysis (1,086 indexed chunks)  
+**Date:** December 2, 2025
+**Query:** "Next.js patterns" (n_results=5)
+**Collection:** agents_analysis (1,086 indexed chunks)
 **Status:** ✅ SUCCESSFUL
 
 ## Query Execution
@@ -64,10 +64,10 @@ All 5 results correctly returned Next.js-specific agents (frontend category):
 
 ### Quality Metrics
 
-✅ **Precision:** 100% (5/5 correct category matches)  
-✅ **Recall:** Identified both major Next.js agents in collection  
-✅ **Relevance:** All results contain Next.js-focused content  
-✅ **Chunk Distribution:** Multiple chunks per agent (showing good chunking)  
+✅ **Precision:** 100% (5/5 correct category matches)
+✅ **Recall:** Identified both major Next.js agents in collection
+✅ **Relevance:** All results contain Next.js-focused content
+✅ **Chunk Distribution:** Multiple chunks per agent (showing good chunking)
 
 ## Key Findings
 

@@ -10,8 +10,6 @@ Can be run standalone, in CI/CD, or as a periodic health check.
 import json
 import sys
 from datetime import datetime
-from pathlib import Path
-from typing import Dict, List, Tuple
 
 from chroma_ingestion.retrieval import CodeRetriever
 
@@ -64,7 +62,7 @@ class ThresholdValidator:
         self.results = []
         self.drift_detected = False
 
-    def validate_query(self, query_config: Dict) -> Dict:
+    def validate_query(self, query_config: dict) -> dict:
         """Validate a single query against expected behavior.
 
         Args:
@@ -125,7 +123,7 @@ class ThresholdValidator:
             "distance_in_range": in_range,
         }
 
-    def run_validation(self) -> List[Dict]:
+    def run_validation(self) -> list[dict]:
         """Run all validation tests.
 
         Returns:
@@ -246,7 +244,7 @@ class ThresholdValidator:
                 f"{result['distance']:.4f} | {exp_range} | {status_icon} |\n"
             )
 
-        report += f"\n## Summary\n"
+        report += "\n## Summary\n"
         report += f"- Tests Passed: {sum(1 for r in self.results if r['status'] == 'PASS')}/{len(self.results)}\n"
         report += f"- Drift Detected: {sum(1 for r in self.results if r['status'] == 'DRIFT')}\n"
         report += f"- Tests Failed: {sum(1 for r in self.results if r['status'] == 'FAIL')}\n"
