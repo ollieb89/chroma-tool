@@ -22,7 +22,7 @@ def print_header(title):
     print(f"{'=' * 80}\n")
 
 
-def test_frontend_query():
+def run_frontend_query():
     """Test Example 1: Frontend Question"""
     print_header("TEST 1: Frontend Question ✅")
 
@@ -58,10 +58,10 @@ def test_frontend_query():
             {"rank": i, "filename": source, "distance": distance, "rating": rating}
         )
 
-    return results_data
+    assert results_data and isinstance(results_data, dict)
 
 
-def test_devops_query():
+def run_devops_query():
     """Test Example 2: DevOps Question"""
     print_header("TEST 2: DevOps Question ✅")
 
@@ -97,10 +97,10 @@ def test_devops_query():
             {"rank": i, "filename": source, "distance": distance, "rating": rating}
         )
 
-    return results_data
+    assert results_data and isinstance(results_data, dict)
 
 
-def test_missing_specialist_query():
+def run_missing_specialist_query():
     """Test Example 3: Missing Specialist Query"""
     print_header("TEST 3: Missing Specialist Query ❌")
 
@@ -141,10 +141,10 @@ def test_missing_specialist_query():
             {"rank": i, "filename": source, "distance": distance, "rating": rating}
         )
 
-    return results_data
+    assert results_data and isinstance(results_data, dict)
 
 
-def test_multiconceptpoor_query():
+def run_multiconceptpoor_query():
     """Test Example 4: Multi-Concept Query (Usually Fails)"""
     print_header("TEST 4: Multi-Concept Query (Usually Fails) ❌")
 
@@ -192,10 +192,10 @@ def test_multiconceptpoor_query():
             {"rank": i, "filename": source, "distance": distance, "rating": rating}
         )
 
-    return results_data
+    assert results_data and isinstance(results_data, dict)
 
 
-def verify_distance_thresholds():
+def run_verify_distance_thresholds():
     """Verify distance threshold calibration"""
     print_header("VERIFICATION: Distance Threshold Calibration")
 
@@ -240,6 +240,7 @@ def verify_distance_thresholds():
                 }
             )
 
+    assert isinstance(threshold_results, list)
     return threshold_results
 
 
@@ -270,17 +271,17 @@ def main():
         # Execute all 4 tests
         print("\n📋 EXECUTING TEST SUITE\n")
 
-        test1 = test_frontend_query()
+        test1 = run_frontend_query()
         all_results["tests"].append(
             {"test_number": 1, "name": "Frontend Question", "status": "✅ Complete", **test1}
         )
 
-        test2 = test_devops_query()
+        test2 = run_devops_query()
         all_results["tests"].append(
             {"test_number": 2, "name": "DevOps Question", "status": "✅ Complete", **test2}
         )
 
-        test3 = test_missing_specialist_query()
+        test3 = run_missing_specialist_query()
         all_results["tests"].append(
             {
                 "test_number": 3,
@@ -290,7 +291,7 @@ def main():
             }
         )
 
-        test4 = test_multiconceptpoor_query()
+        test4 = run_multiconceptpoor_query()
         all_results["tests"].append(
             {
                 "test_number": 4,
@@ -301,7 +302,7 @@ def main():
         )
 
         # Verify thresholds
-        thresholds = verify_distance_thresholds()
+        thresholds = run_verify_distance_thresholds()
         all_results["threshold_verification"] = thresholds
 
         # Print summary

@@ -22,10 +22,10 @@ Intelligently extract, chunk, and store code/documents in Chroma Cloud using sem
 
 ### Installation
 
-Install from PyPI:
+Install from PyPI using `uv`:
 
 ```bash
-pip install chroma-ingestion
+uv pip install chroma-ingestion
 ```
 
 Or install from source with development dependencies:
@@ -33,7 +33,7 @@ Or install from source with development dependencies:
 ```bash
 git clone https://github.com/chroma-core/chroma-ingestion.git
 cd chroma-ingestion
-pip install -e ".[dev]"
+uv sync
 ```
 
 ### Basic Usage

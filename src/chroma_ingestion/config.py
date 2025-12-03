@@ -5,7 +5,6 @@ use a .env file (which is loaded automatically via python-dotenv).
 """
 
 import os
-from typing import Optional
 
 
 def get_chroma_config() -> dict[str, str | int]:
@@ -24,7 +23,7 @@ def get_chroma_config() -> dict[str, str | int]:
         ValueError: If invalid port configuration
     """
     host: str = os.getenv("CHROMA_HOST", "localhost")
-    port_str: Optional[str] = os.getenv("CHROMA_PORT", "9500")
+    port_str: str = os.getenv("CHROMA_PORT", "9500")
 
     try:
         port: int = int(port_str)

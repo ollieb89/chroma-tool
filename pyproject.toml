@@ -50,6 +50,19 @@ dev = [
 [project.scripts]
 chroma-ingest = "chroma_ingestion.cli:main"
 
+[dependency-groups]
+dev = [
+    "nox>=2024.0",
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "pytest-asyncio>=0.23",
+    "mypy>=1.8",
+    "ruff>=0.4",
+    "pre-commit>=3.6",
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.5",
+]
+
 [project.urls]
 Homepage = "https://github.com/chroma-core/chroma-ingestion"
 Documentation = "https://chroma-ingestion.readthedocs.io"
@@ -106,6 +119,20 @@ module = [
     "langchain_text_splitters.*",
 ]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "yaml",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "tests.*",
+]
+ignore_missing_imports = true
+disallow_untyped_defs = false
+allow_untyped_calls = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

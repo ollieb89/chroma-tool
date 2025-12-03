@@ -25,10 +25,10 @@ class TestGetChromaClientSingleton:
             mock_client_instance = MagicMock()
             mock_http.return_value = mock_client_instance
 
-            client = get_chroma_client()
+            _client = get_chroma_client()
 
-            assert client is not None
-            assert client == mock_client_instance
+            assert _client is not None
+            assert _client == mock_client_instance
 
     def test_get_chroma_client_singleton_reuses_instance(self) -> None:
         """Test that get_chroma_client returns same instance on multiple calls."""
@@ -37,13 +37,13 @@ class TestGetChromaClientSingleton:
             mock_client_instance = MagicMock()
             mock_http.return_value = mock_client_instance
 
-            client1 = get_chroma_client()
-            client2 = get_chroma_client()
-            client3 = get_chroma_client()
+            _client1 = get_chroma_client()
+            _client2 = get_chroma_client()
+            _client3 = get_chroma_client()
 
             # All should be same instance
-            assert client1 is client2
-            assert client2 is client3
+            assert _client1 is _client2
+            assert _client2 is _client3
 
             # Constructor should only be called once
             assert mock_http.call_count == 1
@@ -62,7 +62,7 @@ class TestGetChromaClientSingleton:
             mock_client_instance = MagicMock()
             mock_http.return_value = mock_client_instance
 
-            client = get_chroma_client()
+            _client = get_chroma_client()
 
             # Verify config was loaded
             mock_config.assert_called_once()
@@ -82,18 +82,18 @@ class TestGetChromaClientSingleton:
             reset_client()
             custom_config = {
                 "host": "custom-host.example.com",
-                "port": 8000,
+                "port": 9500,
             }
             mock_config.return_value = custom_config
             mock_client_instance = MagicMock()
             mock_http.return_value = mock_client_instance
 
-            client = get_chroma_client()
+            _client = get_chroma_client()
 
             # Verify custom config was used
             mock_http.assert_called_once_with(
                 host="custom-host.example.com",
-                port=8000,
+                port=9500,
             )
 
 
@@ -106,14 +106,14 @@ class TestResetClient:
             # Create first instance
             reset_client()
             mock_http.return_value = MagicMock()
-            client1 = get_chroma_client()
+            _client1 = get_chroma_client()
 
             # Reset
             reset_client()
 
             # Create second instance - should call constructor again
             mock_http.return_value = MagicMock()
-            client2 = get_chroma_client()
+            _client2 = get_chroma_client()
 
             # Should have been called twice (once per cycle)
             assert mock_http.call_count == 2
@@ -137,18 +137,18 @@ class TestResetClient:
             reset_client()
             mock_config.return_value = {"host": "host1", "port": 9500}
             mock_http.return_value = MagicMock()
-            client1 = get_chroma_client()
+            _client1 = get_chroma_client()
             mock_http.assert_called_with(host="host1", port=9500)
 
             # Reset and change config
             reset_client()
-            mock_config.return_value = {"host": "host2", "port": 8000}
+            mock_config.return_value = {"host": "host2", "port": 9500}
             mock_http.reset_mock()
             mock_http.return_value = MagicMock()
-            client2 = get_chroma_client()
+            _client2 = get_chroma_client()
 
             # Should use new config
-            mock_http.assert_called_with(host="host2", port=8000)
+            mock_http.assert_called_with(host="host2", port=9500)
 
 
 class TestClientInitialization:
@@ -204,10 +204,10 @@ class TestClientInitialization:
                 "host": "invalid-host",
                 "port": 99999,
             }
-            mock_http.side_effect = Exception("Connection failed")
+            mock_http.side_effect = RuntimeError("Connection failed")
 
-            # Should raise the exception
-            with pytest.raises(Exception):
+            # Should raise the exception (use a specific exception type)
+            with pytest.raises(RuntimeError):
                 get_chroma_client()
 
 
@@ -223,9 +223,9 @@ class TestClientConnectionManagement:
 
             # Get client multiple times
             for _ in range(5):
-                client = get_chroma_client()
+                _client = get_chroma_client()
                 # Use client (simulate operations)
-                client.get_or_create_collection("test")
+                _client.get_or_create_collection("test")
 
             # HttpClient constructor should only be called once
             assert mock_http.call_count == 1
@@ -240,12 +240,12 @@ class TestClientConnectionManagement:
             assert mock_http.call_count == 0
 
             # First call creates it
-            get_chroma_client()
+            _ = get_chroma_client()
             assert mock_http.call_count == 1
 
             # Subsequent calls don't create new ones
-            get_chroma_client()
-            get_chroma_client()
+            _ = get_chroma_client()
+            _ = get_chroma_client()
             assert mock_http.call_count == 1
 
 

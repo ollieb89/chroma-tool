@@ -226,7 +226,7 @@ class TestAgentIngesterInitialization:
 
     def test_agent_ingester_init(self, tmp_path: Path) -> None:
         """Test AgentIngester initialization."""
-        with patch("chroma_ingestion.ingestion.agents.get_chroma_client"):
+        with patch("chroma_ingestion.ingestion.base.get_chroma_client"):
             ingester = AgentIngester(
                 target_folder=str(tmp_path),
                 collection_name="agents",
@@ -239,7 +239,7 @@ class TestAgentIngesterInitialization:
 
     def test_agent_ingester_has_agent_patterns(self, tmp_path: Path) -> None:
         """Test that AgentIngester uses agent-specific patterns."""
-        with patch("chroma_ingestion.ingestion.agents.get_chroma_client"):
+        with patch("chroma_ingestion.ingestion.base.get_chroma_client"):
             ingester = AgentIngester(
                 target_folder=str(tmp_path),
                 collection_name="agents",
@@ -267,7 +267,7 @@ This is the body of the agent.
 """
         )
 
-        with patch("chroma_ingestion.ingestion.agents.get_chroma_client"):
+        with patch("chroma_ingestion.ingestion.base.get_chroma_client"):
             ingester = AgentIngester(
                 target_folder=str(tmp_path),
                 collection_name="agents",
@@ -284,7 +284,7 @@ This is the body of the agent.
         agent_file = tmp_path / "test.agent.md"
         agent_file.write_text("# Agent Body\nNo frontmatter here.")
 
-        with patch("chroma_ingestion.ingestion.agents.get_chroma_client"):
+        with patch("chroma_ingestion.ingestion.base.get_chroma_client"):
             ingester = AgentIngester(
                 target_folder=str(tmp_path),
                 collection_name="agents",
@@ -304,18 +304,20 @@ class TestCodeIngesterErrorHandling:
         restricted_dir = tmp_path / "restricted"
         restricted_dir.mkdir()
 
-        with patch("chroma_ingestion.ingestion.base.get_chroma_client"):
-            with patch("glob.glob") as mock_glob:
-                mock_glob.side_effect = PermissionError("Permission denied")
+        with (
+            patch("chroma_ingestion.ingestion.base.get_chroma_client"),
+            patch("glob.glob") as mock_glob,
+        ):
+            mock_glob.side_effect = PermissionError("Permission denied")
 
-                ingester = CodeIngester(
-                    target_folder=str(tmp_path),
-                    collection_name="test",
-                )
+            ingester = CodeIngester(
+                target_folder=str(tmp_path),
+                collection_name="test",
+            )
 
-                # Should handle error gracefully
-                with pytest.raises(PermissionError):
-                    ingester.discover_files()
+            # Should handle error gracefully
+            with pytest.raises(PermissionError):
+                ingester.discover_files()
 
     def test_split_text_empty_content(self, tmp_path: Path) -> None:
         """Test splitting empty content."""

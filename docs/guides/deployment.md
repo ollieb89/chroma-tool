@@ -31,11 +31,11 @@ services:
       CHROMA_DB_IMPL: duckdb+parquet
       CHROMA_DATA_VOLUME_PATH: /chroma/data
     ports:
-      - "9500:8000"
+      - "9500:9500"
     volumes:
       - ./chroma_data:/chroma/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      test: ["CMD", "curl", "-f", "http://localhost:9500/api/v1/heartbeat"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -188,7 +188,7 @@ spec:
       - name: chroma
         image: ghcr.io/chroma-core/chroma:latest
         ports:
-        - containerPort: 8000
+        - containerPort: 9500
         env:
         - name: IS_PERSISTENT
           value: "TRUE"
@@ -200,7 +200,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /api/v1/heartbeat
-            port: 8000
+            port: 9500
           initialDelaySeconds: 10
           periodSeconds: 30
       volumes:
@@ -216,8 +216,8 @@ spec:
   selector:
     app: chroma
   ports:
-  - port: 8000
-    targetPort: 8000
+  - port: 9500
+    targetPort: 9500
   type: ClusterIP
 ---
 apiVersion: v1
@@ -259,7 +259,7 @@ spec:
         - name: CHROMA_HOST
           value: "chroma-service"
         - name: CHROMA_PORT
-          value: "8000"
+          value: "9500"
         resources:
           requests:
             memory: "256Mi"
@@ -444,8 +444,8 @@ spec:
   selector:
     app: chroma
   ports:
-  - port: 8000
-    targetPort: 8000
+  - port: 9500
+    targetPort: 9500
 ```
 
 ### Data Protection

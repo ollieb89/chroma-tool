@@ -337,7 +337,7 @@ python -m build
 mkdocs build
 
 # 5. Serve documentation locally
-mkdocs serve  # Open http://localhost:8000
+mkdocs serve  # Open http://localhost:9500
 
 # 6. Verify CLI
 ./activate/bin/python -m chroma_ingestion.cli --help

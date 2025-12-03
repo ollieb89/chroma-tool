@@ -84,7 +84,8 @@ def validate_agent(agent_name, filepath):
             results["issues"].append(f"Missing content section: {section}")
 
     # Metrics
-    results["metrics"]["file_size_bytes"] = len(open(filepath).read())
+    with open(filepath, encoding="utf-8") as _f:
+        results["metrics"]["file_size_bytes"] = len(_f.read())
     results["metrics"]["content_length"] = len(content)
     results["metrics"]["frontmatter_fields"] = len(frontmatter) if frontmatter else 0
 
@@ -101,7 +102,7 @@ def validate_agent(agent_name, filepath):
     return results
 
 
-def test_agent_scenarios(agent_name, frontmatter, content):
+def agent_scenarios(agent_name, frontmatter, content):
     """Test agent for real-world usability scenarios."""
     scenarios = []
 
@@ -196,7 +197,7 @@ def main():
         if results["checks"]["file_loads"]:
             frontmatter, content = load_agent(filepath)
             frontmatter = frontmatter or {}
-            scenarios = test_agent_scenarios(agent_name, frontmatter, content)
+            scenarios = agent_scenarios(agent_name, frontmatter, content)
             results["scenarios"] = scenarios
         else:
             results["scenarios"] = []
@@ -204,7 +205,7 @@ def main():
         all_results.append(results)
 
         # Count checks
-        for check, passed in results["checks"].items():
+        for _, passed in results["checks"].items():
             total_checks += 1
             if passed:
                 passed_checks += 1

@@ -4,17 +4,20 @@ This module provides initialization and utility functions for the Chroma
 HttpClient, following best practices for client management and configuration.
 """
 
-from typing import Optional
+from typing import Any
 
 import chromadb
 
 from chroma_ingestion.config import get_chroma_config
 
 # Global client instance (singleton pattern)
-_client: Optional[chromadb.HttpClient] = None
+# Use `Any` for the client type annotation because some third-party stubs
+# expose callables that mypy may not consider valid types. This avoids
+# spurious mypy errors while preserving runtime behavior.
+_client: Any | None = None
 
 
-def get_chroma_client() -> chromadb.HttpClient:
+def get_chroma_client() -> Any:
     """Get or initialize the Chroma HttpClient.
 
     Uses a singleton pattern to ensure a single client instance is reused
@@ -31,10 +34,11 @@ def get_chroma_client() -> chromadb.HttpClient:
 
     if _client is None:
         config = get_chroma_config()
-        _client = chromadb.HttpClient(
-            host=config["host"],
-            port=config["port"],
-        )
+        # Coerce types to satisfy downstream expectations: host=str, port=int
+        host = str(config.get("host", "localhost"))
+        port = int(config.get("port", 9500))
+
+        _client = chromadb.HttpClient(host=host, port=port)
 
     return _client
 

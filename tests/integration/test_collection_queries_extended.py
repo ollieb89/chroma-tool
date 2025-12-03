@@ -24,7 +24,7 @@ def print_header(title):
     print(f"{'=' * 80}\n")
 
 
-def test_query(test_num, name, query, expected_agent, expected_distance_range, query_type):
+def run_query(test_num, name, query, expected_agent, expected_distance_range, query_type):
     """
     Generic test runner for any query
 
@@ -133,7 +133,7 @@ def main():
         print("\n📋 EXECUTING EXTENDED TEST SUITE (12 Tests)\n")
 
         # Test 1: Frontend Architecture - Multi-concept
-        test1 = test_query(
+        test1 = run_query(
             1,
             "Frontend Architecture - React Hooks",
             "How do I use React hooks and compose them effectively?",
@@ -144,7 +144,7 @@ def main():
         all_results["tests"].append(test1)
 
         # Test 2: Frontend Edge Case - Ambiguous
-        test2 = test_query(
+        test2 = run_query(
             2,
             "Frontend Edge Case - State Management",
             "state management",
@@ -155,7 +155,7 @@ def main():
         all_results["tests"].append(test2)
 
         # Test 3: Backend Architecture - Multi-concept
-        test3 = test_query(
+        test3 = run_query(
             3,
             "Backend Architecture - Secure System Design",
             "How do I design a secure backend system with proper error handling and monitoring?",
@@ -166,7 +166,7 @@ def main():
         all_results["tests"].append(test3)
 
         # Test 4: Backend Edge Case - Simple
-        test4 = test_query(
+        test4 = run_query(
             4,
             "Backend Edge Case - API Design",
             "API design",
@@ -177,7 +177,7 @@ def main():
         all_results["tests"].append(test4)
 
         # Test 5: DevOps/Infrastructure - Multi-concept
-        test5 = test_query(
+        test5 = run_query(
             5,
             "DevOps Infrastructure - CI/CD Pipeline",
             "CI/CD pipeline setup and best practices",
@@ -188,7 +188,7 @@ def main():
         all_results["tests"].append(test5)
 
         # Test 6: DevOps Edge Case - Technology-specific
-        test6 = test_query(
+        test6 = run_query(
             6,
             "DevOps Edge Case - Docker & Kubernetes",
             "Docker containers and Kubernetes orchestration",
@@ -199,7 +199,7 @@ def main():
         all_results["tests"].append(test6)
 
         # Test 7: Security Engineering - Multi-concept
-        test7 = test_query(
+        test7 = run_query(
             7,
             "Security Engineering - Authentication & Authorization",
             "How do I implement authentication and authorization securely?",
@@ -210,7 +210,7 @@ def main():
         all_results["tests"].append(test7)
 
         # Test 8: Security Edge Case - Threat Modeling
-        test8 = test_query(
+        test8 = run_query(
             8,
             "Security Edge Case - Threat Assessment",
             "threat assessment vulnerability testing",
@@ -221,7 +221,7 @@ def main():
         all_results["tests"].append(test8)
 
         # Test 9: Performance Engineering - Multi-concept
-        test9 = test_query(
+        test9 = run_query(
             9,
             "Performance Engineering - Database Optimization",
             "database optimization and query performance tuning",
@@ -232,7 +232,7 @@ def main():
         all_results["tests"].append(test9)
 
         # Test 10: Quality Engineering - Multi-concept
-        test10 = test_query(
+        test10 = run_query(
             10,
             "Quality Engineering - Testing Strategies",
             "testing strategies test automation and quality assurance",
@@ -243,7 +243,7 @@ def main():
         all_results["tests"].append(test10)
 
         # Test 11: Architecture Pattern - Pattern-specific
-        test11 = test_query(
+        test11 = run_query(
             11,
             "Architecture Pattern - Circuit Breaker",
             "circuit breaker pattern microservices architecture",
@@ -254,7 +254,7 @@ def main():
         all_results["tests"].append(test11)
 
         # Test 12: Cross-cutting Concern - Multi-domain
-        test12 = test_query(
+        test12 = run_query(
             12,
             "Cross-cutting Concern - Observability",
             "How do I implement observability, logging, and monitoring across my system?",

@@ -82,7 +82,7 @@
 
 ### Docker & Local Testing Setup
 - ✅ **docker-compose.yml** created
-  - Chroma service on port 8000
+  - Chroma service on port 9500
   - Health checks
   - Persistent volume
   - Ready for local and CI testing

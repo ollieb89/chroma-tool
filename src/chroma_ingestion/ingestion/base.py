@@ -11,11 +11,18 @@ Supports:
 """
 
 import glob
+import logging
 import os
+from datetime import datetime
+from typing import Any
 
 from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
 
 from chroma_ingestion.clients.chroma import get_chroma_client
+from chroma_ingestion.config import get_chroma_config
+
+# Module logger
+logger = logging.getLogger(__name__)
 
 
 class CodeIngester:
@@ -34,6 +41,7 @@ class CodeIngester:
         collection_name: str,
         chunk_size: int = 1000,
         chunk_overlap: int = 200,
+        batch_size: int = 100,
         file_patterns: list[str] | None = None,
     ):
         """Initialize the code ingester.
@@ -48,7 +56,14 @@ class CodeIngester:
         self.target_folder = target_folder
         self.collection_name = collection_name
         self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
+        # Ensure overlap is smaller than chunk_size to avoid splitter errors.
+        if chunk_overlap >= chunk_size:
+            # If user supplied an overlap >= chunk_size, adjust to a sensible fraction
+            # (10% of chunk_size) to preserve splitting behavior while remaining safe.
+            self.chunk_overlap = max(0, chunk_size // 10)
+        else:
+            self.chunk_overlap = chunk_overlap
+        self.batch_size = batch_size
         self.file_patterns = file_patterns or [
             "**/*.py",
             "**/*.md",
@@ -64,8 +79,22 @@ class CodeIngester:
         self.splitter = RecursiveCharacterTextSplitter.from_language(
             language=Language.MARKDOWN,
             chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap,
+            chunk_overlap=self.chunk_overlap,
         )
+
+    def prepare_metadata(self, file_path: str, chunk_index: int) -> dict[str, Any]:
+        """Prepare metadata dict for a given file chunk.
+
+        This helper centralizes metadata construction so unit tests and other
+        ingesters can reuse consistent keys.
+        """
+        return {
+            "source": file_path,
+            "filename": os.path.basename(file_path),
+            "chunk_index": chunk_index,
+            "folder": os.path.dirname(file_path),
+            "file_type": os.path.splitext(file_path)[1],
+        }
 
     def discover_files(self) -> list[str]:
         """Discover files in target folder recursively.
@@ -81,7 +110,7 @@ class CodeIngester:
 
         return sorted(list(set(all_files)))  # Remove duplicates and sort
 
-    def ingest_files(self, batch_size: int = 100) -> tuple[int, int]:
+    def ingest_files(self, batch_size: int | None = None) -> tuple[int, int]:
         """Ingest files from target folder into Chroma.
 
         Uses semantic splitting to preserve document structure.
@@ -93,18 +122,38 @@ class CodeIngester:
         Returns:
             Tuple of (total_files_processed, total_chunks_ingested)
         """
+        # Allow caller to override batch_size; otherwise use configured default
+        batch_size = batch_size or self.batch_size
+
+        # Log runtime audit info: which Chroma host/port and collection we will use
+        try:
+            cfg = get_chroma_config()
+            host = cfg.get("host")
+            port = cfg.get("port")
+        except Exception:
+            host = "unknown"
+            port = "unknown"
+
+        logger.info("[INGEST] Starting ingestion at %sZ", datetime.utcnow().isoformat())
+        logger.info(
+            "[INGEST] Chroma host=%s port=%s collection=%s",
+            host,
+            port,
+            self.collection_name,
+        )
+
         py_files = self.discover_files()
 
         if not py_files:
-            print(f"❌ No matching files found in: {self.target_folder}")
+            logger.info("❌ No matching files found in: %s", self.target_folder)
             return 0, 0
 
-        print(f"📂 Scanning: {self.target_folder}")
-        print(f"📦 Found {len(py_files)} file(s)")
+        logger.info("📂 Scanning: %s", self.target_folder)
+        logger.info("📦 Found %d file(s)", len(py_files))
 
         documents: list[str] = []
         ids: list[str] = []
-        metadatas: list[dict] = []
+        metadatas: list[dict[str, Any]] = []
         files_processed = 0
 
         # Process each file
@@ -119,8 +168,12 @@ class CodeIngester:
                 if chunks:
                     files_processed += 1
                     for i, chunk in enumerate(chunks):
-                        # Unique ID: filename + chunk index
-                        doc_id = f"{os.path.basename(file_path)}:{i}"
+                        # Unique ID: use full file path + chunk index to avoid
+                        # collisions when multiple files share the same basename
+                        # (e.g., many README.md files). Use normalized path for
+                        # readability.
+                        normalized_path = os.path.normpath(file_path)
+                        doc_id = f"{normalized_path}:{i}"
 
                         documents.append(chunk.page_content)
                         ids.append(doc_id)
@@ -135,11 +188,11 @@ class CodeIngester:
                         )
 
             except Exception as e:
-                print(f"⚠️  Could not read {file_path}: {e}")
+                logger.warning("⚠️  Could not read %s: %s", file_path, e)
 
         # Batch upsert to Chroma Cloud
         if documents:
-            print(f"🚀 Ingesting {len(documents)} chunks into Chroma Cloud...")
+            logger.info("🚀 Ingesting %d chunks into Chroma Cloud...", len(documents))
 
             for i in range(0, len(documents), batch_size):
                 batch_docs = documents[i : i + batch_size]
@@ -151,15 +204,19 @@ class CodeIngester:
                     ids=batch_ids,
                     metadatas=batch_metas,
                 )
-                print(f"  ✓ Batch {i // batch_size + 1} complete ({len(batch_docs)} chunks)")
+                logger.info(
+                    "  ✓ Batch %d complete (%d chunks)", i // batch_size + 1, len(batch_docs)
+                )
 
-            print(f"✅ Done! Ingested {len(documents)} chunks from {files_processed} file(s)")
+            logger.info(
+                "✅ Done! Ingested %d chunks from %d file(s)", len(documents), files_processed
+            )
             return files_processed, len(documents)
         else:
-            print("❌ No documents created.")
+            logger.info("❌ No documents created.")
             return files_processed, 0
 
-    def get_collection_stats(self) -> dict:
+    def get_collection_stats(self) -> dict[str, Any]:
         """Get statistics about the ingested collection.
 
         Returns:
@@ -173,3 +230,12 @@ class CodeIngester:
             "chunk_size": self.chunk_size,
             "chunk_overlap": self.chunk_overlap,
         }
+
+    def run(self, batch_size: int | None = None) -> tuple[int, int]:
+        """Run the ingestion using the configured settings.
+
+        This is a convenience wrapper used by the CLI. It delegates to
+        `ingest_files` and returns the same (files_processed, chunks_ingested)
+        tuple.
+        """
+        return self.ingest_files(batch_size=batch_size)

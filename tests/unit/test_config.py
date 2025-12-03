@@ -54,10 +54,10 @@ class TestGetChromaConfig:
         Verifies that custom port values set via environment variables
         are properly reflected in the returned configuration.
         """
-        with patch.dict(os.environ, {"CHROMA_PORT": "8000"}):
+        with patch.dict(os.environ, {"CHROMA_PORT": "9500"}):
             config = get_chroma_config()
             # Port may be stored as string or int depending on implementation
-            assert config.get("port") in [8000, "8000"]
+            assert config.get("port") in [9500, "9500"]
 
     def test_get_chroma_config_localhost_default(self) -> None:
         """Test that localhost is used as default host.

@@ -7,7 +7,7 @@ repositories and stores them in Chroma Cloud for AI agent retrieval and context 
 from chroma_ingestion.clients.chroma import get_chroma_client
 from chroma_ingestion.ingestion.agents import AgentIngester
 from chroma_ingestion.ingestion.base import CodeIngester
-from chroma_ingestion.retrieval.retriever import CodeRetriever, MultiCollectionSearcher
+from chroma_ingestion.retrieval import CodeRetriever, MultiCollectionSearcher
 
 __all__ = [
     "AgentIngester",

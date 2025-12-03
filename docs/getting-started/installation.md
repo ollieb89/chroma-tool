@@ -44,12 +44,12 @@ For local development without Chroma Cloud:
 docker-compose up -d
 ```
 
-This starts Chroma on `localhost:8000`
+This starts Chroma on `localhost:9500`
 
 ### Option 2: Docker
 
 ```bash
-docker run -p 8000:8000 ghcr.io/chroma-core/chroma:latest
+docker run -p 9500:9500 ghcr.io/chroma-core/chroma:latest
 ```
 
 ### Option 3: Python Package
@@ -79,7 +79,7 @@ CHROMA_PORT=443
 
 ### Using Local Chroma
 
-Default configuration uses `localhost:8000`:
+Default configuration uses `localhost:9500`:
 
 ```bash
 # Start Chroma
@@ -94,11 +94,11 @@ chroma-ingest ./code --collection my_collection
 ### Connection Error to Chroma
 
 ```
-Error: Could not connect to Chroma at localhost:8000
+Error: Could not connect to Chroma at localhost:9500
 ```
 
 **Solution:**
-1. Verify Chroma is running: `curl http://localhost:8000/api/v1/heartbeat`
+1. Verify Chroma is running: `curl http://localhost:9500/api/v1/heartbeat`
 2. Check host/port configuration in `.env`
 3. Start Chroma: `docker-compose up -d`
 

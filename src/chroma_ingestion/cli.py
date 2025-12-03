@@ -6,6 +6,7 @@ the ingested code using semantic queries.
 
 from __future__ import annotations
 
+import logging
 import sys
 from pathlib import Path
 
@@ -18,17 +19,50 @@ from chroma_ingestion import (
     __version__,
 )
 
+logger = logging.getLogger(__name__)
+
+
+def configure_logging(debug: bool = False, log_file: str | None = None) -> None:
+    """Configure root logging for the CLI."""
+    root = logging.getLogger()
+    # Avoid adding multiple handlers in tests/runs
+    if root.handlers:
+        for h in list(root.handlers):
+            root.removeHandler(h)
+
+    level = logging.DEBUG if debug else logging.INFO
+    root.setLevel(level)
+
+    fmt = "%(asctime)s %(levelname)s %(name)s: %(message)s"
+    formatter = logging.Formatter(fmt)
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    root.addHandler(stream_handler)
+
+    if log_file:
+        fh = logging.FileHandler(log_file)
+        fh.setFormatter(formatter)
+        root.addHandler(fh)
+
 
 @click.group()
 @click.version_option(version=__version__)
-def main() -> None:
+@click.option("--debug", is_flag=True, help="Enable debug logging.")
+@click.option("--log-file", type=click.Path(), default=None, help="Write logs to this file.")
+@click.pass_context
+def main(ctx, debug: bool, log_file: str | None) -> None:
     """Chroma Ingestion - Semantic code search for ChromaDB.
 
     A semantic-aware code extraction and storage system that intelligently
     chunks code repositories and stores them in ChromaDB for AI agent
     retrieval and context generation.
     """
-    pass
+    # Configure logging once for the CLI run
+    configure_logging(debug=debug, log_file=log_file)
+    logger.info("Starting chroma-ingest CLI (debug=%s, log_file=%s)", debug, log_file)
+    # Keep click context for subcommands if needed
+    ctx.obj = {"debug": debug, "log_file": log_file}
 
 
 @main.command()
@@ -87,7 +121,7 @@ def ingest(
         folder_path = Path(folder).resolve()
 
         if agents:
-            click.echo(f"🤖 Starting agent ingestion from {folder_path}")
+            logger.info("🤖 Starting agent ingestion from %s", folder_path)
             ingester = AgentIngester(
                 target_folder=str(folder_path),
                 collection_name=collection,
@@ -96,7 +130,7 @@ def ingest(
                 batch_size=batch_size,
             )
         else:
-            click.echo(f"📂 Starting code ingestion from {folder_path}")
+            logger.info("📂 Starting code ingestion from %s", folder_path)
             ingester = CodeIngester(
                 target_folder=str(folder_path),
                 collection_name=collection,
@@ -107,17 +141,19 @@ def ingest(
 
         # Run ingestion
         ingester.run()
-        click.echo(f"✅ Ingestion complete! Stored in collection: {collection}")
+        logger.info("✅ Ingestion complete! Stored in collection: %s", collection)
 
         # Run verification if requested
         if verify:
-            click.echo("🔍 Running verification queries...")
+            logger.info("🔍 Running verification queries...")
             retriever = CodeRetriever(collection)
             info = retriever.get_collection_info()
-            click.echo(f"📊 Collection stats: {info['count']} chunks ingested")
+            # `get_collection_info()` returns {'total_chunks': count}
+            total = info.get("total_chunks", info.get("count", 0))
+            logger.info("📊 Collection stats: %s chunks ingested", total)
 
     except Exception as e:
-        click.echo(f"❌ Error during ingestion: {e}", err=True)
+        logger.exception("❌ Error during ingestion: %s", e)
         sys.exit(1)
 
 
@@ -163,12 +199,12 @@ def search(
     """
     try:
         retriever = CodeRetriever(collection)
-        click.echo(f"🔍 Searching for: {query}")
+        logger.info("🔍 Searching for: %s", query)
 
         results = retriever.query(query, n_results=num_results)
 
         if not results:
-            click.echo("❌ No results found.")
+            logger.warning("❌ No results found.")
             return
 
         # Filter by threshold if specified
@@ -186,7 +222,7 @@ def search(
         if output_json:
             import json
 
-            click.echo(json.dumps(filtered_results, indent=2))
+            logger.info(json.dumps(filtered_results, indent=2))
         else:
             for i, result in enumerate(filtered_results, 1):
                 distance = result.get("distance", 0)
@@ -194,13 +230,13 @@ def search(
                 filename = result.get("metadata", {}).get("filename", "Unknown")
                 source = result.get("metadata", {}).get("source", "Unknown")
 
-                click.echo(f"{i}. {filename} (confidence: {confidence:.2%})")
-                click.echo(f"   📍 {source}")
-                click.echo(f"   {result['document'][:150].strip()}...")
-                click.echo()
+                logger.info("%d. %s (confidence: %.2f%%)", i, filename, confidence * 100)
+                logger.info("   📍 %s", source)
+                logger.info("   %s...", result["document"][:150].strip())
+                logger.info("")
 
     except Exception as e:
-        click.echo(f"❌ Search error: {e}", err=True)
+        logger.exception("❌ Search error: %s", e)
         sys.exit(1)
 
 
@@ -222,15 +258,15 @@ def info(collection: str) -> None:
         retriever = CodeRetriever(collection)
         info_dict = retriever.get_collection_info()
 
-        click.echo(f"📊 Collection: {collection}")
-        click.echo(f"   Chunks: {info_dict.get('count', 0)}")
+        logger.info("📊 Collection: %s", collection)
+        logger.info("   Chunks: %s", info_dict.get("total_chunks", info_dict.get("count", 0)))
 
         # Display additional metadata if available
         if "metadata_count" in info_dict:
-            click.echo(f"   Metadata entries: {info_dict['metadata_count']}")
+            logger.info("   Metadata entries: %s", info_dict["metadata_count"])
 
     except Exception as e:
-        click.echo(f"❌ Error: {e}", err=True)
+        logger.exception("❌ Error: %s", e)
         sys.exit(1)
 
 

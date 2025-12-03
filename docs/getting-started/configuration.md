@@ -19,7 +19,7 @@ CHROMA_PORT=443
 ```bash
 # Using local Chroma instance
 CHROMA_HOST=localhost
-CHROMA_PORT=8000  # default
+CHROMA_PORT=9500  # default
 ```
 
 ### Client Configuration
@@ -40,7 +40,7 @@ Create a `.env` file in your project root:
 ```
 # Chroma Local Connection
 CHROMA_HOST=localhost
-CHROMA_PORT=8000
+CHROMA_PORT=9500
 
 # Or Chroma Cloud
 # CHROMA_HOST=api.chroma.com
@@ -76,7 +76,7 @@ If not configured, chroma-ingestion defaults to:
 
 ```
 CHROMA_HOST=localhost
-CHROMA_PORT=8000
+CHROMA_PORT=9500
 ```
 
 This is perfect for local development with Chroma running via Docker.
@@ -103,7 +103,7 @@ reset_chroma_client()
 ```
 
 **Check:**
-1. Chroma is running: `curl http://localhost:8000/api/v1/heartbeat`
+1. Chroma is running: `curl http://localhost:9500/api/v1/heartbeat`
 2. Host and port are correct
 3. Network connectivity if using Cloud
 

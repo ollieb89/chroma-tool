@@ -8,11 +8,16 @@ Extends CodeIngester with agent-aware features:
 """
 
 import glob
+import logging
 import os
+from typing import Any, ClassVar
 
 import yaml
 
 from chroma_ingestion.ingestion.base import CodeIngester
+
+# Module logger
+logger = logging.getLogger(__name__)
 
 
 class AgentIngester(CodeIngester):
@@ -26,7 +31,7 @@ class AgentIngester(CodeIngester):
     """
 
     # Tech stack keywords to extract
-    TECH_KEYWORDS = {
+    TECH_KEYWORDS: ClassVar[dict[str, list[str]]] = {
         "frontend": [
             "nextjs",
             "next.js",
@@ -56,7 +61,7 @@ class AgentIngester(CodeIngester):
     }
 
     # Category classification keywords
-    CATEGORY_KEYWORDS = {
+    CATEGORY_KEYWORDS: ClassVar[dict[str, list[str]]] = {
         "frontend": ["frontend", "react", "nextjs", "ui", "ux", "component"],
         "backend": ["backend", "api", "python", "fastapi", "server"],
         "architecture": ["architect", "system", "design", "infrastructure"],
@@ -71,11 +76,12 @@ class AgentIngester(CodeIngester):
 
     def __init__(
         self,
-        source_folders: list[str],
+        target_folder: str | list[str],
         collection_name: str = "agents_analysis",
         chunk_size: int = 1500,  # Larger for agent files
         chunk_overlap: int = 300,
         exclusions: list[str] | None = None,
+        batch_size: int = 50,
     ):
         """Initialize agent ingester with multiple source folders.
 
@@ -86,17 +92,49 @@ class AgentIngester(CodeIngester):
             chunk_overlap: Token overlap between chunks
             exclusions: List of filenames to exclude
         """
-        self.source_folders = source_folders
+        # Normalize input: accept either a single target_folder or a list of folders
+        if isinstance(target_folder, list | tuple):
+            self.source_folders = list(target_folder)
+        else:
+            self.source_folders = [target_folder]
+
         self.exclusions = exclusions or []
 
         # Initialize parent with first folder (we'll override discovery)
         super().__init__(
-            target_folder=source_folders[0] if source_folders else ".",
+            target_folder=self.source_folders[0] if self.source_folders else ".",
             collection_name=collection_name,
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
+            batch_size=batch_size,
             file_patterns=["**/*.md", "**/*.agent.md", "**/*.prompt.md"],
         )
+
+        # Keep `batch_size` attribute consistent with parent
+        self.batch_size = batch_size
+
+    def parse_agent_metadata(self, file_path: str) -> dict[str, Any]:
+        """Parse agent file and return a minimal metadata dict expected by tests.
+
+        Tests expect keys like `name`, `description`, and `tags`. This method
+        reads the file, extracts YAML frontmatter if present, and returns a
+        dict with those keys (falling back to sensible defaults).
+        """
+        try:
+            with open(file_path, encoding="utf-8") as f:
+                content = f.read()
+        except Exception:
+            return {}
+
+        frontmatter, _ = self.parse_frontmatter(content)
+
+        # Normalize to test-expected keys
+        return {
+            "name": frontmatter.get("name")
+            or os.path.basename(file_path).replace(".agent.md", "").replace(".md", ""),
+            "description": frontmatter.get("description", ""),
+            "tags": frontmatter.get("tags", []),
+        }
 
     def discover_files(self) -> list[str]:
         """Discover agent files across all source folders.
@@ -124,7 +162,7 @@ class AgentIngester(CodeIngester):
 
         return sorted(list(set(filtered)))
 
-    def parse_frontmatter(self, content: str) -> tuple[dict, str]:
+    def parse_frontmatter(self, content: str) -> tuple[dict[str, Any], str]:
         """Parse YAML frontmatter from agent file.
 
         Args:
@@ -133,7 +171,7 @@ class AgentIngester(CodeIngester):
         Returns:
             Tuple of (frontmatter_dict, remaining_content)
         """
-        frontmatter = {}
+        frontmatter: dict[str, Any] = {}
         body = content
 
         # Check for YAML frontmatter
@@ -144,7 +182,7 @@ class AgentIngester(CodeIngester):
                     frontmatter = yaml.safe_load(parts[1]) or {}
                     body = parts[2].strip()
                 except yaml.YAMLError as e:
-                    print(f"  ⚠️  YAML parse error: {e}")
+                    logger.warning("YAML parse error: %s", e)
 
         return frontmatter, body
 
@@ -160,7 +198,7 @@ class AgentIngester(CodeIngester):
         content_lower = content.lower()
         found_tech = set()
 
-        for category, keywords in self.TECH_KEYWORDS.items():
+        for keywords in self.TECH_KEYWORDS.values():
             for keyword in keywords:
                 if keyword in content_lower:
                     found_tech.add(keyword)
@@ -185,9 +223,9 @@ class AgentIngester(CodeIngester):
             category_scores[category] = score
 
         # Return highest scoring category
-        return max(category_scores, key=category_scores.get, default="general")
+        return max(category_scores, key=lambda k: category_scores[k], default="general")
 
-    def extract_metadata(self, file_path: str, content: str) -> tuple[dict, str]:
+    def extract_metadata(self, file_path: str, content: str) -> tuple[dict[str, Any], str]:
         """Extract rich metadata from agent file.
 
         Args:
@@ -266,9 +304,9 @@ class AgentIngester(CodeIngester):
                 f"📂 Found {len(agent_files)} agent files across {len(self.source_folders)} folders"
             )
 
-        documents = []
-        ids = []
-        metadatas = []
+        documents: list[str] = []
+        ids: list[str] = []
+        metadatas: list[dict[str, Any]] = []
         files_processed = 0
         files_failed = 0
 
@@ -286,7 +324,12 @@ class AgentIngester(CodeIngester):
                 if chunks:
                     files_processed += 1
                     for i, chunk in enumerate(chunks):
-                        doc_id = f"{base_metadata['agent_name']}:{i}"
+                        # Use agent name + normalized path + chunk index to ensure
+                        # uniqueness across files with same agent_name.
+                        normalized_path = os.path.normpath(file_path)
+                        doc_id = (
+                            f"{base_metadata.get('agent_name','unknown')}:{normalized_path}:{i}"
+                        )
 
                         # Add chunk-specific metadata
                         chunk_metadata = {
@@ -301,36 +344,35 @@ class AgentIngester(CodeIngester):
 
             except Exception as e:
                 files_failed += 1
-                if verbose:
-                    print(f"  ⚠️  Could not process {os.path.basename(file_path)}: {e}")
+                logger.warning("Could not process %s: %s", os.path.basename(file_path), e)
 
         # Batch upsert
         if documents:
-            if verbose:
-                print(
-                    f"🚀 Ingesting {len(documents)} chunks into collection '{self.collection_name}'..."
-                )
+            logger.info(
+                "Ingesting %d chunks into collection '%s'...", len(documents), self.collection_name
+            )
 
             for i in range(0, len(documents), batch_size):
                 batch_docs = documents[i : i + batch_size]
                 batch_ids = ids[i : i + batch_size]
                 batch_metas = metadatas[i : i + batch_size]
 
-                self.collection.upsert(
-                    documents=batch_docs,
-                    ids=batch_ids,
-                    metadatas=batch_metas,
-                )
-                if verbose:
-                    print(f"  ✓ Batch {i // batch_size + 1} ({len(batch_docs)} chunks)")
+                self.collection.upsert(documents=batch_docs, ids=batch_ids, metadatas=batch_metas)
+                logger.info("Batch %d complete (%d chunks)", i // batch_size + 1, len(batch_docs))
 
-            if verbose:
-                print(f"✅ Done! Ingested {len(documents)} chunks from {files_processed} agents")
-                if files_failed > 0:
-                    print(f"⚠️  {files_failed} files failed to process")
+            logger.info("Done! Ingested %d chunks from %d agents", len(documents), files_processed)
+            if files_failed > 0:
+                logger.warning("%d files failed to process", files_failed)
 
             return files_processed, len(documents)
 
-        if verbose:
-            print("❌ No documents created.")
+        logger.info("No documents created.")
         return files_processed, 0
+
+    def run(self, batch_size: int | None = None) -> tuple[int, int]:
+        """Run agent ingestion (convenience wrapper for CLI).
+
+        Delegates to `ingest_agents` so the CLI can uniformly call `run()` on
+        either `CodeIngester` or `AgentIngester` instances.
+        """
+        return self.ingest_agents(batch_size=batch_size or self.batch_size, verbose=True)
