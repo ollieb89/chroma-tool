@@ -7,7 +7,7 @@ use a .env file (which is loaded automatically via python-dotenv).
 import os
 
 
-def get_chroma_config() -> dict:
+def get_chroma_config() -> dict[str, str | int]:
     """Load Chroma HttpClient configuration from environment variables.
 
     Configuration for connecting to a local ChromaDB HTTP server.
@@ -27,10 +27,10 @@ def get_chroma_config() -> dict:
 
     try:
         port: int = int(port_str)
-    except (ValueError, TypeError):
+    except (ValueError, TypeError) as err:
         raise ValueError(
             f"Invalid CHROMA_PORT: {port_str}. Must be a valid integer. Default is 9500."
-        )
+        ) from err
 
     return {
         "host": host,

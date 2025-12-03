@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "chroma-ingestion"
-version = "0.2.0"
+version = "0.2.1"
 description = "Semantic-aware code ingestion and retrieval for ChromaDB"
 readme = "README.md"
 license = { text = "MIT" }
