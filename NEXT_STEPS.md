@@ -41,27 +41,59 @@ You now have a **complete, production-ready package** with:
 
 ## What to Do Now (3 Simple Steps)
 
-### Step 1️⃣: Configure Trusted Publishing (10 minutes)
+### Step 1️⃣: Register Trusted Publisher on TestPyPI (5 minutes) ⚠️ CRITICAL
 
-Your workflows are now configured to use **Trusted Publishing** (OIDC) - more secure than API tokens!
+**This step is REQUIRED for the workflow to work.**
 
-See the complete setup guide: **[TRUSTED_PUBLISHING_SETUP.md](TRUSTED_PUBLISHING_SETUP.md)**
+1. **Open TestPyPI settings:** https://test.pypi.org/manage/project/chroma-ingestion/settings/publishing/
+   - Must be logged in as project owner
 
-Quick steps:
-1. Register TestPyPI Trusted Publisher: https://test.pypi.org/manage/project/chroma-ingestion/settings/publishing/
-2. Register Production PyPI Trusted Publisher: https://pypi.org/manage/project/chroma-ingestion/settings/publishing/
+2. **Click "Add a new pending publisher"** and fill in:
+   ```
+   Publisher name:    GitHub
+   Repository owner:  <your-github-username>
+   Repository name:   chroma
+   Workflow name:     publish-test.yml
+   Environment name:  (leave empty)
+   ```
 
-Each takes ~2 minutes. GitHub will prompt you to verify. No GitHub secrets needed!
+3. **Click "Save pending publisher"**
 
-**Benefits:**
-- ✅ No long-lived API tokens
-- ✅ Automatic token rotation
-- ✅ Industry best practice
-- ✅ Shorter setup than old method
+4. **GitHub will send approval link** - Click and approve on TestPyPI
+
+5. **Verify** - TestPyPI should show your publisher with ✅ Active status
+
+**Why:** PyPI needs to verify that GitHub Actions running your workflow is legitimate before allowing uploads.
+
+See detailed guide: **[TRUSTED_PUBLISHING_SETUP.md](TRUSTED_PUBLISHING_SETUP.md)**
 
 ---
 
-### Step 2️⃣: Test Pre-Release Workflow (30 minutes)
+### Step 2️⃣: Register Trusted Publisher on Production PyPI (5 minutes) ⚠️ CRITICAL
+
+1. **Open PyPI settings:** https://pypi.org/manage/project/chroma-ingestion/settings/publishing/
+   - Must be logged in as project owner
+
+2. **Click "Add a new pending publisher"** and fill in:
+   ```
+   Publisher name:    GitHub
+   Repository owner:  <your-github-username>
+   Repository name:   chroma
+   Workflow name:     publish.yml
+   Environment name:  (leave empty)
+   ```
+
+3. **Click "Save pending publisher"**
+
+4. **GitHub will send approval link** - Click and approve on PyPI
+
+5. **Verify** - PyPI should show your publisher with ✅ Active status
+
+**Why:** You need separate publishers for TestPyPI and Production PyPI. They're different services with different repositories.
+
+---
+
+### Step 3️⃣: Test Pre-Release Workflow (30 minutes)
 
 Test everything works before production release:
 
@@ -93,7 +125,7 @@ If everything works, continue to Step 3. If something fails:
 
 ---
 
-### Step 3️⃣: Production Release (2 minutes)
+### Step 4️⃣: Production Release (2 minutes)
 
 Once testing passes, release to production:
 
