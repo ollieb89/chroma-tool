@@ -3,6 +3,7 @@
 Provides tools for querying ingested code chunks and validating data quality.
 """
 
+from typing import Optional
 from chroma_ingestion.clients.chroma import get_chroma_client
 
 
@@ -96,8 +97,8 @@ class CodeRetriever:
 
     def query_by_metadata(
         self,
-        where: dict | None = None,
-        where_document: dict | None = None,
+        where: Optional[dict] = None,
+        where_document: Optional[dict] = None,
         n_results: int = 10,
     ) -> list[dict]:
         """Query collection with metadata filtering.

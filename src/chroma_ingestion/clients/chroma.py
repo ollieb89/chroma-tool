@@ -4,12 +4,14 @@ This module provides initialization and utility functions for the Chroma
 HttpClient, following best practices for client management and configuration.
 """
 
+from typing import Optional
+
 import chromadb
 
 from chroma_ingestion.config import get_chroma_config
 
 # Global client instance (singleton pattern)
-_client: chromadb.HttpClient | None = None
+_client: Optional[chromadb.HttpClient] = None
 
 
 def get_chroma_client() -> chromadb.HttpClient:
