@@ -1,0 +1,23 @@
+name: Chroma smoke test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Run smoke test
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          chmod +x ./scripts/chroma_smoke_test.sh
+          ./scripts/chroma_smoke_test.sh
