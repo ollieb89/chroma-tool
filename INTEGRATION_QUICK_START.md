@@ -35,6 +35,8 @@ docker compose logs --no-color --tail 200 chroma
 
 If you cannot run `sudo` on the host or prefer a simpler fallback, you can run the container as root (less secure) by re-adding `user: root` to the `chroma` service in `docker-compose.yml`.
 
+Note: Because the container image now contains a hardened entrypoint that idempotently fixes ownership and checks writability, the host helper `fix_chroma_volume_permissions.sh` is usually not required. It remains documented here as a fallback for environments where host-level ownership fixes are preferred or where the runtime imposes extra constraints.
+
 Note: The Docker image now contains a hardened entrypoint (`docker-entrypoint.sh`) that will idempotently fix ownership of common persist paths and verify they are writable before dropping privileges to the application user. If the entrypoint cannot make a path writable it will fail with a clear hint showing the `docker run --rm -v chroma_data:/data ... chown -R 1000:1000 /data` command to fix the host volume.
 
 
